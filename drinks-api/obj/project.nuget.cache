@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "IStL7yWeFqZ5LhFLEFEfzE5CvHwovUoJ2isBIwDiim2x1teQZAJQW9uSiGPfWUoQkHQpzCdQClTitefeCz2MRw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\craig\\workspace\\projects\\minibar-tender\\drinks-api\\drinks-api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\craig\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\craig\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\craig\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
+    "C:\\Users\\craig\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
+    "C:\\Users\\craig\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",
+    "C:\\Users\\craig\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
