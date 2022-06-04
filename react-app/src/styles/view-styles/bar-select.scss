@@ -1,0 +1,19 @@
+#openBarsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: 10px;
+
+  padding: 10px;
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+}
+
+.open-bar-btn {
+  width: 100%;
+  font-size: 16pt;
+}
+
+#newBarBtn {
+  margin-top: 10px;
+}
