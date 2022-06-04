@@ -1,0 +1,23 @@
+.hidden {
+  position: absolute;
+  visibility: hidden;
+}
+
+.no-click {
+  pointer-events: none;
+}
+
+.number-input-field {
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 3px;
+  text-align: center;
+  width: 2em;
+}
+
+.basic-icon {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 24px;
+}
