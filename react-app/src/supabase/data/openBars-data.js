@@ -1,29 +1,29 @@
 // GET CURRENTLY OPEN BARS
-async function getOpenBars() {
+const getOpenBars = async () => {
 }
 
 // GET SINGLE OPEN BAR
-async function getOpenBar(firebaseKey) {
+const getOpenBar = async (barId) => {
 }
 
 // CREATE NEW BAR
-async function createNewBar(newBarInfoObj) {
+const createNewBar = async (newBarInfoObj) => {
 }
 
 // GET BAR INVENTORY
-async function getBarInventory(barKey) {
+const getBarInventory = async (barKey) => {
 }
 
 // DELETE BAR
-async function deleteBar(firebaseKey) {
+const deleteBar = async (barId) => {
 }
 
 // CLOSE BAR AND UNSTOCK DRINKS FROM INVENTORY
-async function closeBar(barKey) {
+const closeBar = async (barKey) => {
 }
 
 // UPDATE BAR
-async function updateBar(barKey, updateKey) {
+const updateBar = async (barKey, updateKey) => {
 }
 
 export {

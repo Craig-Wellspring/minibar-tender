@@ -1,6 +1,8 @@
 # Mini-bar Tender
 ## Developed by Craig Wellspring
 
+[Deployed Site](https://minibartender.netlify.app)
+
 [Git Repository](https://github.com/Craig-Wellspring/minibar-tender)  
 
 [DBDiagram ERD](https://dbdiagram.io/d/6126a2876dc2bb6073bb8285)  

@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getUser } from '../../supabase/auth';
+import { currentUser } from '../../supabase/auth';
 
 export default function OpenBar({ barInfo }) {
   function getRoleIcon() {
     let iconName = '';
-    if (barInfo.serverKey === getUser().uid) {
+    if (barInfo.serverKey === currentUser().uid) {
       iconName = 'fa-cash-register';
-    } else if (barInfo.stockerKey === getUser().uid) {
+    } else if (barInfo.stockerKey === currentUser().uid) {
       iconName = 'fa-dolly';
     } else {
       iconName = 'fa-user-alt-slash';
