@@ -1,5 +1,15 @@
+import { supabase } from '../auth';
+
+const storeId = 1;
+
 // GET CURRENTLY OPEN BARS
 const getOpenBars = async () => {
+  const openBars = await supabase
+    .from('Open Bars')
+    .select('*')
+    .eq('store_id', storeId)
+
+  return openBars;
 }
 
 // GET SINGLE OPEN BAR

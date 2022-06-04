@@ -5,9 +5,9 @@ import { currentUser } from '../../supabase/auth';
 export default function OpenBar({ barInfo }) {
   function getRoleIcon() {
     let iconName = '';
-    if (barInfo.serverKey === currentUser().uid) {
+    if (barInfo.server_id === currentUser().id) {
       iconName = 'fa-cash-register';
-    } else if (barInfo.stockerKey === currentUser().uid) {
+    } else if (barInfo.stocker_id === currentUser().id) {
       iconName = 'fa-dolly';
     } else {
       iconName = 'fa-user-alt-slash';
@@ -17,17 +17,17 @@ export default function OpenBar({ barInfo }) {
 
   function getBarColor() {
     let colorClass = '';
-    if (barInfo.stockerOnly) {
-      colorClass = barInfo.stockerKey ? 'success' : 'danger';
-    } else if (!barInfo.stockerOnly) {
-      if (barInfo.serverKey && barInfo.stockerKey) {
+    if (barInfo.stocker_only) {
+      colorClass = barInfo.stocker_id ? 'success' : 'danger';
+    } else if (!barInfo.stocker_only) {
+      if (barInfo.server_id && barInfo.stocker_id) {
         colorClass = 'success';
       } else if (
-        (barInfo.serverKey && !barInfo.stockerKey)
-        || (!barInfo.serverKey && barInfo.stockerKey)
+        (barInfo.server_id && !barInfo.stocker_id)
+        || (!barInfo.server_id && barInfo.stocker_id)
       ) {
         colorClass = 'warning';
-      } else if (!barInfo.serverKey && !barInfo.stockerKey) {
+      } else if (!barInfo.server_id && !barInfo.stocker_id) {
         colorClass = 'danger';
       }
     }

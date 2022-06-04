@@ -6,18 +6,22 @@ import Title from '../Title';
 
 export default function BarSelect() {
   const [openBarsState, setOpenBarsState] = useState([]);
+
   useEffect(() => {
-    // getOpenBars().then(setOpenBarsState);
+    (async function() {
+      let openBars = await getOpenBars();
+      setOpenBarsState(openBars.data);
+    })();
   }, []);
 
   return (
     <>
       <Title title="Bar Select" />
-      {/* <div id="openBarsContainer">
+      <div id="openBarsContainer">
         {openBarsState.map((openBar) => (
-          <OpenBar key={openBar.firebaseKey} barInfo={openBar} />
+          <OpenBar key={openBar.id} barInfo={openBar} />
         ))}
-      </div> */}
+      </div>
       <NewBarButton />
     </>
   );
