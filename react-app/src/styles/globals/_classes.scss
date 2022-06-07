@@ -21,3 +21,11 @@
   padding: 6px 12px;
   font-size: 24px;
 }
+
+.btn-selected {
+  background-color: $btnSelectedColor;
+}
+
+.btn-unselected {
+  background-color: $btnUnselectedColor;
+}
