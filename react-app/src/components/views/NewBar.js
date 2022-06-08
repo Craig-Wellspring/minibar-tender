@@ -40,8 +40,6 @@ const DrinkSelection = styled.div`
   flex-direction: column;
   text-align: center;
   justify-content: center;
-
-  margin-top: 15px;
 `;
 
 const NewDrinkButton = styled.button``;
@@ -52,7 +50,7 @@ export default function NewBar() {
   const [currentDate, setDate] = useState(null);
   const [floor, setFloor] = useState(0);
   const [stockerOnly, setStockerOnly] = useState(true);
-  const [availableDrinks, setAvailableDrinks] = useState([])
+  const [availableDrinks, setAvailableDrinks] = useState([]);
   const [selectedDrinks, setSelectedDrinks] = useState([]);
 
   const formatCurrentDate = () => {
@@ -66,27 +64,77 @@ export default function NewBar() {
   const populateDrinks = async () => {
     const drinksList = await getDrinksList();
     setAvailableDrinks(drinksList);
-  }
+    setSelectedDrinks(drinksList.filter((d) => d.default_drink));
+  };
+
+  const selectDrink = (drink) => {
+    if (
+      selectedDrinks.filter((d) => d.drink_name === drink.drink_name).length ===
+      0
+    ) {
+      setSelectedDrinks([...selectedDrinks, drink]);
+    } else {
+      unselectDrink(drink);
+    }
+  };
+
+  const drinkIsSelected = (drink) => {
+    if (selectedDrinks.filter((d) => d.id === drink.id).length > 0) return true;
+    return false;
+  };
+
+  const unselectDrink = (drink) => {
+    setSelectedDrinks(selectedDrinks.filter((d) => d.id !== drink.id));
+  };
+
+  const setStartCount = (drink, newStartCount) => {
+    if (newStartCount && drinkIsSelected(drink)) {
+      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
+      drink.start_count = newStartCount;
+      setSelectedDrinks([...otherDrinks, drink]);
+    }
+  };
+
+  const setDrinkPrice = (drink, newPrice) => {
+    if (newPrice && drinkIsSelected(drink)) {
+      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
+      drink.price = newPrice;
+      setSelectedDrinks([...otherDrinks, drink]);
+    }
+  };
 
   useEffect(() => {
     formatCurrentDate();
     populateDrinks();
+
+    availableDrinks.forEach((drink) => {
+      if (drink.default_drink) {
+        setSelectedDrinks([...selectedDrinks, drink]);
+      }
+    });
   }, []);
 
   return (
     <>
       <Title title="Open New Bar" />
+
       <BarDetails>
         <DateDisplay>
           Date
           {<br />}
-          <input type="date" defaultValue={currentDate} />
+          <input
+            type="date"
+            defaultValue={currentDate}
+            onChange={(e) => {
+              setDate(e.target.value);
+            }}
+          />
         </DateDisplay>
         {<br />}
         Floor
         <BtnContainer>
           <FloorButton
-            className={`btn-${floor == 1 ? "selected" : "unselected"}`}
+            className={`btn-${floor === 1 ? "selected" : "unselected"}`}
             onClick={() => {
               setFloor(1);
             }}
@@ -94,7 +142,7 @@ export default function NewBar() {
             1
           </FloorButton>
           <FloorButton
-            className={`btn-${floor == 2 ? "selected" : "unselected"}`}
+            className={`btn-${floor === 2 ? "selected" : "unselected"}`}
             onClick={() => {
               setFloor(2);
             }}
@@ -116,17 +164,34 @@ export default function NewBar() {
           Stocker Only Mode
         </ModeCheck>
       </BarDetails>
-      
+
+      {<br />}
       <DrinkSelection>
         Select Drinks
         {availableDrinks.map((drink) => (
           <AvailableDrink
             key={drink.id}
             drink={drink}
+            selectDrink={selectDrink}
+            setStartCount={setStartCount}
+            setDrinkPrice={setDrinkPrice}
           />
         ))}
-        <NewDrinkButton>+</NewDrinkButton>
+        <NewDrinkButton
+          onClick={() => {
+            // Create new bar with date, floor, mode
+
+            // Stock new bar with each drink
+            selectedDrinks.forEach((drink) => {
+              console.warn(drink);
+            });
+          }}
+        >
+          +
+        </NewDrinkButton>
       </DrinkSelection>
+
+      {/* Accept and Cancel buttons */}
     </>
   );
 }
