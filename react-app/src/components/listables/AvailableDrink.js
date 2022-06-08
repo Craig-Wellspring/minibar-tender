@@ -6,8 +6,6 @@ const DrinkObj = styled.div`
   display: flex;
   gap: 10px;
   justify-content: space-between;
-
-  padding: 5px;
 `;
 
 const NumberInput = styled.input`

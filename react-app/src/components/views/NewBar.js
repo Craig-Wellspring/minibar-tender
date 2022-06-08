@@ -3,6 +3,8 @@ import Title from "../Title";
 import styled from "styled-components";
 import { getDrinksList } from "../../supabase/data/drinksList-data";
 import AvailableDrink from "../listables/AvailableDrink";
+import BackButton from "../buttons/BackButton";
+import GenericButton from "../buttons/GenericButton";
 
 const BarDetails = styled.div`
   display: flex;
@@ -16,6 +18,8 @@ const BtnContainer = styled.div`
   justify-content: center;
   gap: 10px;
 `;
+
+const DateDisplay = styled.div``;
 
 const FloorButton = styled.div`
   width: 100%;
@@ -40,11 +44,11 @@ const DrinkSelection = styled.div`
   flex-direction: column;
   text-align: center;
   justify-content: center;
+
+  gap: 10px;
 `;
 
-const NewDrinkButton = styled.button``;
-
-const DateDisplay = styled.div``;
+const SubmitButton = styled.button``;
 
 export default function NewBar() {
   const [currentDate, setDate] = useState(null);
@@ -52,6 +56,9 @@ export default function NewBar() {
   const [stockerOnly, setStockerOnly] = useState(true);
   const [availableDrinks, setAvailableDrinks] = useState([]);
   const [selectedDrinks, setSelectedDrinks] = useState([]);
+
+  const [showDeleteBtns, setShowDeleteBtns] = useState(false);
+  const [showEditBtns, setShowEditBtns] = useState(false);
 
   const formatCurrentDate = () => {
     const rawDate = new Date();
@@ -101,6 +108,15 @@ export default function NewBar() {
       drink.price = newPrice;
       setSelectedDrinks([...otherDrinks, drink]);
     }
+  };
+
+  const submitNewBar = () => {
+    // Create new bar with date, floor, mode
+
+    // Stock new bar with each drink
+    selectedDrinks.forEach((drink) => {
+      console.warn(drink);
+    });
   };
 
   useEffect(() => {
@@ -177,21 +193,38 @@ export default function NewBar() {
             setDrinkPrice={setDrinkPrice}
           />
         ))}
-        <NewDrinkButton
-          onClick={() => {
-            // Create new bar with date, floor, mode
-
-            // Stock new bar with each drink
-            selectedDrinks.forEach((drink) => {
-              console.warn(drink);
-            });
-          }}
-        >
-          +
-        </NewDrinkButton>
+        <BtnContainer>
+          <GenericButton
+            id="show-delete-buttons"
+            className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
+            iconName="minus"
+            onClick={() => {
+              setShowDeleteBtns(!showDeleteBtns);
+            }}
+          />
+          <GenericButton
+            id="show-edit-buttons"
+            className={`btn-${showEditBtns ? "unselected" : "info"}`}
+            iconName="edit"
+            onClick={() => {
+              setShowEditBtns(!showEditBtns);
+              console.warn("clickedit");
+            }}
+          />
+          <GenericButton
+            id="add-drink-button"
+            className="btn-selected"
+            iconName="plus"
+          />
+        </BtnContainer>
       </DrinkSelection>
 
-      {/* Accept and Cancel buttons */}
+      <BtnContainer>
+        <BackButton />
+        <SubmitButton type="button" className="btn" onClick={submitNewBar}>
+          Submit
+        </SubmitButton>
+      </BtnContainer>
     </>
   );
 }
