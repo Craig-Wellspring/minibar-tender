@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import Title from "../Title";
 import styled from "styled-components";
 import { getDrinksList } from "../../supabase/data/drinksList-data";
 import AvailableDrink from "../listables/AvailableDrink";
 import BackButton from "../buttons/BackButton";
 import GenericButton from "../buttons/GenericButton";
+import { createNewBar } from "../../supabase/data/openBars-data";
+import { stockDrinks } from "../../supabase/data/stockedDrinks-data";
+import LoadingIcon from "../buttons/LoadingIcon";
 
 const BarDetails = styled.div`
   display: flex;
@@ -48,9 +52,9 @@ const DrinkSelection = styled.div`
   gap: 10px;
 `;
 
-const SubmitButton = styled.button``;
-
 export default function NewBar() {
+  const navigate = useNavigate();
+
   const [currentDate, setDate] = useState(null);
   const [floor, setFloor] = useState(0);
   const [stockerOnly, setStockerOnly] = useState(true);
@@ -59,6 +63,7 @@ export default function NewBar() {
 
   const [showDeleteBtns, setShowDeleteBtns] = useState(false);
   const [showEditBtns, setShowEditBtns] = useState(false);
+  const [showBtnTray, setShowBtnTray] = useState(true);
 
   const formatCurrentDate = () => {
     const rawDate = new Date();
@@ -110,13 +115,27 @@ export default function NewBar() {
     }
   };
 
-  const submitNewBar = () => {
+  const submitNewBar = async () => {
+    // Hide submit/back buttons
+    setShowBtnTray(false);
+
     // Create new bar with date, floor, mode
+    const newBarInfoObj = {
+      store_id: 1,
+      bar_date: currentDate,
+      floor: floor,
+      stocker_only: stockerOnly,
+    };
+    const newBarID = await createNewBar(newBarInfoObj);
 
     // Stock new bar with each drink
-    selectedDrinks.forEach((drink) => {
-      console.warn(drink);
-    });
+    const drinksToStock = [];
+    selectedDrinks.forEach((drink) =>
+      drinksToStock.push({ ...drink, bar_id: newBarID })
+    );
+    await stockDrinks(drinksToStock);
+
+    navigate("/barselect");
   };
 
   useEffect(() => {
@@ -191,6 +210,8 @@ export default function NewBar() {
             selectDrink={selectDrink}
             setStartCount={setStartCount}
             setDrinkPrice={setDrinkPrice}
+            showDeleteBtns={showDeleteBtns}
+            showEditBtns={showEditBtns}
           />
         ))}
         <BtnContainer>
@@ -208,7 +229,6 @@ export default function NewBar() {
             iconName="edit"
             onClick={() => {
               setShowEditBtns(!showEditBtns);
-              console.warn("clickedit");
             }}
           />
           <GenericButton
@@ -220,10 +240,18 @@ export default function NewBar() {
       </DrinkSelection>
 
       <BtnContainer>
-        <BackButton />
-        <SubmitButton type="button" className="btn" onClick={submitNewBar}>
-          Submit
-        </SubmitButton>
+        {showBtnTray ? (
+          <>
+            <BackButton />
+            <GenericButton
+              className="btn-selected"
+              iconName="vote-yea"
+              onClick={submitNewBar}
+            />
+          </>
+        ) : (
+          <LoadingIcon />
+        )}
       </BtnContainer>
     </>
   );

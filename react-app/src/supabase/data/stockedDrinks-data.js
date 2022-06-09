@@ -1,3 +1,5 @@
+import { supabase } from "../auth";
+
 // GET ALL CURRENTLY STOCKED DRINK ITEMS
 const getStockedDrinks = () => {};
 
@@ -5,7 +7,11 @@ const getStockedDrinks = () => {};
 const getStockedDrinkObj = () => {};
 
 // CREATE STOCKED DRINK OBJECT
-const createStockedDrinkObj = () => {};
+const stockDrinks = async (drinksArray) => {
+  const { data, error } = await supabase
+    .from("Stocked Drinks")
+    .insert(drinksArray);
+};
 
 // DELETE INVENTORY OBJECT
 const deleteStockedDrink = () => {};
@@ -16,7 +22,7 @@ const updateStockedDrink = () => {};
 export {
   getStockedDrinks,
   getStockedDrinkObj,
-  createStockedDrinkObj,
+  stockDrinks,
   deleteStockedDrink,
   updateStockedDrink,
 };

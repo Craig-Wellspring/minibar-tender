@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import GenericButton from "../buttons/GenericButton";
 
 const DrinkObj = styled.div`
   display: flex;
@@ -26,11 +27,20 @@ const DrinkButton = styled.div`
   text-align: center;
 `;
 
-function AvailableDrink({ drink, selectDrink, setStartCount, setDrinkPrice }) {
+function AvailableDrink({
+  drink,
+  selectDrink,
+  setStartCount,
+  setDrinkPrice,
+  showDeleteBtns,
+  showEditBtns,
+}) {
   const [isSelected, setIsSelected] = useState(drink.default_drink);
 
   return (
     <DrinkObj>
+      {showDeleteBtns && <GenericButton iconName="trash-alt" className="btn-danger" />}
+      {showEditBtns && <GenericButton iconName="pen" className="btn-info" />}
       <NumberInput
         type="number"
         defaultValue={drink.start_count}
@@ -65,6 +75,8 @@ AvailableDrink.propTypes = {
   selectDrink: PropTypes.func.isRequired,
   setStartCount: PropTypes.func.isRequired,
   setDrinkPrice: PropTypes.func.isRequired,
+  showDeleteBtns: PropTypes.bool.isRequired,
+  showEditBtns: PropTypes.bool.isRequired,
 };
 
 export default AvailableDrink;

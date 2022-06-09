@@ -1,17 +1,16 @@
-import React from 'react';
-import { useNavigate } from 'react-router';
+import React from "react";
+import { useNavigate } from "react-router";
+import GenericButton from "./GenericButton";
 
 export default function NewBarButton() {
   const navigate = useNavigate();
 
   return (
-    <button
-      type="button"
-      id="newBarBtn"
-      className="btn btn-success"
-      onClick={() => navigate('/newbar')}
-    >
-      <i className="fas fa-plus" />
-    </button>
+    <GenericButton
+      className="btn-selected"
+      style={{ width: "100%", marginTop: "15px" }}
+      iconName="plus"
+      onClick={() => navigate("/newbar")}
+    />
   );
 }
