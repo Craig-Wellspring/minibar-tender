@@ -1,6 +1,6 @@
 import React from 'react';
-import { signOutUser } from '../../supabase/auth';
-import GenericButton from './GenericButton';
+import { signOutUser } from '../../api/auth';
+import GenericButton from '../generics/GenericButton';
 
 export default function SignOutButton() {
   return (

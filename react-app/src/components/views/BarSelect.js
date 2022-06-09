@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getOpenBars } from '../../supabase/data/openBars-data';
+import { getOpenBars } from '../../api/data/openBars-data';
 import NewBarButton from '../buttons/NewBarButton';
 import OpenBar from '../listables/OpenBar';
 import Title from '../Title';

@@ -6,9 +6,9 @@ const getStockedDrinks = () => {};
 // GET SINGLE STOCKED DRINK OBJECT
 const getStockedDrinkObj = () => {};
 
-// CREATE STOCKED DRINK OBJECT
+// CREATE STOCKED DRINK OBJECTS
 const stockDrinks = async (drinksArray) => {
-  const { data, error } = await supabase
+  await supabase
     .from("Stocked Drinks")
     .insert(drinksArray);
 };

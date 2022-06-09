@@ -2,7 +2,7 @@ import { supabase } from '../auth';
 
 // GET DRINKS
 const getDrinksList = async () => {
-  let { data: availableDrinks, error } = await supabase
+  let { data: availableDrinks } = await supabase
   .from('Available Drinks')
   .select('*')
 
@@ -16,7 +16,12 @@ const getSingleDrink = () => {};
 const addNewDrink = () => {};
 
 // DELETE DRINK
-const deleteDrink = () => {};
+const deleteDrink = async (drinkID) => {
+  await supabase
+  .from('Available Drinks')
+  .delete()
+  .eq('id', drinkID)
+};
 
 // UPDATE DRINK
 const updateDrink = () => {};

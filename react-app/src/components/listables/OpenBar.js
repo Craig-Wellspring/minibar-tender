@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { currentUser } from '../../supabase/auth';
+import { currentUser } from '../../api/auth';
 
 export default function OpenBar({ barInfo }) {
   function getRoleIcon() {

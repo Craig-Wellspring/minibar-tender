@@ -17,7 +17,7 @@ const getOpenBar = async (barId) => {};
 
 // CREATE NEW BAR
 const createNewBar = async (newBarInfoObj) => {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("Open Bars")
     .insert([newBarInfoObj]);
 

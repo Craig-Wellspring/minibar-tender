@@ -1,31 +1,48 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import GenericButton from "../buttons/GenericButton";
+import GenericButton from "../generics/GenericButton";
+import { deleteDrink } from "../../api/data/drinksList-data";
 
 const DrinkObj = styled.div`
   display: flex;
-  gap: 10px;
   justify-content: space-between;
+  align-items: center;
+  font-size: 22px;
 `;
 
 const NumberInput = styled.input`
-  width: 3em;
-  height: 3em;
+  width: 2.2em;
+  height: 2.2em;
   border-radius: 4px;
   text-align: center;
+  margin: 4px;
+  font-size: 14pt;
 `;
 
 const DrinkButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
+  
   width: 100%;
+  height: 2.8em;
   border-radius: 4px;
+  margin: 0px 10px;
 
-  padding: 10px;
   text-align: center;
+  font-size: 14pt;
+  color: black;
 `;
+
+const drinkTypeIcons = {
+  beer: "beer",
+  seltzer: "can-food",
+  liquor: "bottle-droplet",
+  jello: "whiskey-glass",
+  water: "bottle-water"
+}
 
 function AvailableDrink({
   drink,
@@ -39,7 +56,7 @@ function AvailableDrink({
 
   return (
     <DrinkObj>
-      {showDeleteBtns && <GenericButton iconName="trash-alt" className="btn-danger" />}
+      {showDeleteBtns && <GenericButton iconName="trash-alt" className="btn-danger" onClick={() => {deleteDrink(drink.id)}}/>}
       {showEditBtns && <GenericButton iconName="pen" className="btn-info" />}
       <NumberInput
         type="number"
@@ -56,9 +73,10 @@ function AvailableDrink({
           setIsSelected(!isSelected);
         }}
       >
-        {drink.drink_name} {drink.drink_type}
+        <i className={`fas fa-${drinkTypeIcons[drink.drink_type]}`} />
+        {drink.drink_name}
       </DrinkButton>
-      <NumberInput
+      $<NumberInput
         type="number"
         defaultValue={drink.price}
         onChange={(e) => {

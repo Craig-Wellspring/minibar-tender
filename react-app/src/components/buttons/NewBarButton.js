@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import GenericButton from "./GenericButton";
+import GenericButton from "../generics/GenericButton";
 
 export default function NewBarButton() {
   const navigate = useNavigate();
