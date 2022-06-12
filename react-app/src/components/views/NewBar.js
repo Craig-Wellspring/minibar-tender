@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Title from "../Title";
 import styled from "styled-components";
-import { getDrinksList } from "../../api/data/drinksList-data";
+import {
+  addNewDrink,
+  deleteDrink,
+  getDrinksList,
+  updateDrink,
+} from "../../api/data/drinksList-data";
 import AvailableDrink from "../listables/AvailableDrink";
 import BackButton from "../buttons/BackButton";
 import GenericButton from "../generics/GenericButton";
@@ -11,6 +16,7 @@ import { stockDrinks } from "../../api/data/stockedDrinks-data";
 import LoadingIcon from "../buttons/LoadingIcon";
 import { ColumnSection, Section } from "../generics/StyledComponents";
 import Modal from "../generics/Modal";
+import AvailableDrinkModal from "../modal-content/AvailableDrinkModal";
 
 const Body = styled.div`
   display: flex;
@@ -26,11 +32,14 @@ const DateSelector = styled.input`
   align-self: center;
 `;
 
-const ModeCheck = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const defaultDrinkData = {
+  drink_name: "",
+  drink_type: "beer",
+  price: 9,
+  start_count: 24,
+  package_count: 6,
+  default_drink: true,
+};
 
 export default function NewBar() {
   const navigate = useNavigate();
@@ -38,19 +47,23 @@ export default function NewBar() {
   const [currentDate, setDate] = useState(null);
   const [floor, setFloor] = useState(1);
   const [stockerOnly, setStockerOnly] = useState(true);
-  const [availableDrinks, setAvailableDrinks] = useState([]);
+
   const [selectedDrinks, setSelectedDrinks] = useState([]);
+  const [availableDrinks, setAvailableDrinks] = useState([]);
 
   const [showDeleteBtns, setShowDeleteBtns] = useState(false);
   const [showEditBtns, setShowEditBtns] = useState(false);
   const [showBtnTray, setShowBtnTray] = useState(true);
+
   const [showModal, setShowModal] = useState(false);
+  const [drinkModalData, setDrinkModalData] = useState(defaultDrinkData);
 
   const formatCurrentDate = () => {
     const rawDate = new Date();
     const formattedDate = `${rawDate.getFullYear()}-${String(
       rawDate.getMonth() + 1
-    ).padStart(2, "0")}-0${rawDate.getDate()}`;
+    ).padStart(2, "0")}-${String(rawDate.getDate()).padStart(2, "0")}`;
+
     setDate(formattedDate);
   };
 
@@ -80,12 +93,9 @@ export default function NewBar() {
     setSelectedDrinks(selectedDrinks.filter((d) => d.id !== drink.id));
   };
 
-  const setStartCount = (drink, newStartCount) => {
-    if (newStartCount && drinkIsSelected(drink)) {
-      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
-      drink.start_count = newStartCount;
-      setSelectedDrinks([...otherDrinks, drink]);
-    }
+  const deleteDrinkBtn = (drinkID) => {
+    deleteDrink(drinkID);
+    setAvailableDrinks(availableDrinks.filter((d) => d.id !== drinkID));
   };
 
   const setDrinkPrice = (drink, newPrice) => {
@@ -96,27 +106,49 @@ export default function NewBar() {
     }
   };
 
-  const defaultDrinkData = {
-    drink_name: "",
-    drink_type: "",
-    price: 9,
-    start_count: 24,
-    default_drink: true,
+  const setStartCount = (drink, newStartCount) => {
+    if (newStartCount && drinkIsSelected(drink)) {
+      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
+      drink.start_count = newStartCount;
+      setSelectedDrinks([...otherDrinks, drink]);
+    }
   };
 
-  const [drinkModalData, setDrinkModalData] = useState(defaultDrinkData);
+  const setPackageCount = (drink, newPackageCount) => {
+    if (newPackageCount && drinkIsSelected(drink)) {
+      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
+      drink.package_count = newPackageCount;
+      setSelectedDrinks([...otherDrinks, drink]);
+    }
+  };
 
   const openNewDrinkModal = () => {
     setShowModal(true);
+    setDrinkModalData(defaultDrinkData);
+    window.scrollTo(0, 0);
+  };
+
+  const submitNewDrink = async (drinkObj) => {
+    const newDrinkObj = await addNewDrink(drinkObj);
+    setAvailableDrinks([...availableDrinks, newDrinkObj]);
+    closeDrinkModal();
+  };
+
+  const openEditDrinkModal = (drinkData) => {
+    setShowModal(true);
+    setDrinkModalData(drinkData);
+    window.scrollTo(0, 0);
+  };
+
+  const submitEditDrink = async (drinkObj) => {
+    closeDrinkModal();
+    const filteredList = availableDrinks.filter((d) => d.id !== drinkObj.id);
+    const updatedDrinkObj = await updateDrink(drinkObj);
+    setAvailableDrinks([...filteredList, updatedDrinkObj]);
   };
 
   const closeDrinkModal = () => {
     setShowModal(false);
-    setDrinkModalData(defaultDrinkData);
-  };
-
-  const submitNewDrink = (drinkObj) => {
-    console.warn("submitnewdrink");
   };
 
   const submitNewBar = async () => {
@@ -140,6 +172,7 @@ export default function NewBar() {
         drink_type: drink.drink_type,
         price: parseInt(drink.price),
         start_count: parseInt(drink.start_count),
+        package_count: parseInt(drink.package_count),
         bar_id: newBarID,
       };
       drinksToStock.push(newDrinkObj);
@@ -150,15 +183,10 @@ export default function NewBar() {
     navigate("/barselect");
   };
 
+  //Initialize
   useEffect(() => {
     formatCurrentDate();
     populateDrinks();
-
-    availableDrinks.forEach((drink) => {
-      if (drink.default_drink) {
-        setSelectedDrinks([...selectedDrinks, drink]);
-      }
-    });
   }, []);
 
   return (
@@ -203,19 +231,22 @@ export default function NewBar() {
             key={drink.id}
             drink={drink}
             selectDrink={selectDrink}
-            setStartCount={setStartCount}
             setDrinkPrice={setDrinkPrice}
+            setStartCount={setStartCount}
+            setPackageCount={setPackageCount}
             showDeleteBtns={showDeleteBtns}
+            deleteDrinkBtn={deleteDrinkBtn}
             showEditBtns={showEditBtns}
+            openEditDrinkModal={openEditDrinkModal}
           />
         ))}
         <Section>
           <GenericButton
-            id="show-delete-buttons"
-            className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
-            iconName="minus"
+            id="add-drink-button"
+            className="btn-selected"
+            iconName="plus"
             onClick={() => {
-              setShowDeleteBtns(!showDeleteBtns);
+              openNewDrinkModal();
             }}
           />
           <GenericButton
@@ -227,17 +258,17 @@ export default function NewBar() {
             }}
           />
           <GenericButton
-            id="add-drink-button"
-            className="btn-selected"
-            iconName="plus"
+            id="show-delete-buttons"
+            className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
+            iconName="minus"
             onClick={() => {
-              openNewDrinkModal();
+              setShowDeleteBtns(!showDeleteBtns);
             }}
           />
         </Section>
       </ColumnSection>
 
-      <ModeCheck>
+      <Section>
         <input
           type="checkbox"
           style={{ width: "25px", height: "25px" }}
@@ -248,17 +279,17 @@ export default function NewBar() {
           }}
         />
         <Title title="Stocker Only Mode" />
-      </ModeCheck>
+      </Section>
 
       <Section>
         {showBtnTray ? (
           <>
-            <BackButton />
             <GenericButton
               className="btn-selected"
               iconName="vote-yea"
               onClick={submitNewBar}
             />
+            <BackButton />
           </>
         ) : (
           <LoadingIcon />
@@ -268,12 +299,23 @@ export default function NewBar() {
       {showModal && (
         <Modal
           id="drinkFormModal"
+          modalContent={
+            <AvailableDrinkModal
+              drinkObj={drinkModalData}
+              setModalData={setDrinkModalData}
+            />
+          }
           closeModal={() => {
             closeDrinkModal();
           }}
           submitModal={() => {
-            submitNewDrink();
+            if (drinkModalData.id) {
+              submitEditDrink(drinkModalData);
+            } else {
+              submitNewDrink(drinkModalData);
+            }
           }}
+          submitIcon={drinkModalData.id ? "check-double" : "check"}
         />
       )}
     </Body>

@@ -17,9 +17,7 @@ const getOpenBar = async (barId) => {};
 
 // CREATE NEW BAR
 const createNewBar = async (newBarInfoObj) => {
-  const { data } = await supabase
-    .from("Open Bars")
-    .insert([newBarInfoObj]);
+  const { data } = await supabase.from("Open Bars").insert([newBarInfoObj]);
 
   return data[0].id;
 };
@@ -34,7 +32,9 @@ const deleteBar = async (barId) => {};
 const closeBar = async (barKey) => {};
 
 // UPDATE BAR
-const updateBar = async (barKey, updateKey) => {};
+const updateBar = async (barID, updateObject) => {
+  await supabase.from("Open Bars").update(updateObject).eq("id", barID);
+};
 
 export {
   getOpenBars,

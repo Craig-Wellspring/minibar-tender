@@ -2,24 +2,23 @@ import React from "react";
 import PropTypes from "prop-types";
 import CloseModalButton from "../buttons/CloseModalButton";
 import GenericButton from "./GenericButton";
-import { Section, ColumnSection } from "./StyledComponents";
+import { Section, ColumnSection, Break } from "./StyledComponents";
 import styled from "styled-components";
 
 const Blur = styled.div`
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(255, 255, 255, 0.2);
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(8px);
 `;
 
 const ModalBody = styled(ColumnSection)`
   background-color: black;
   position: absolute;
-  top: calc(50% - 130px);
-  height: 260px;
+  top: calc(20%);
   left: 10%;
   width: 80%;
 
@@ -31,20 +30,21 @@ const ModalBody = styled(ColumnSection)`
   border-radius: 4px;
 `;
 
-function Modal({ closeModal, submitModal }) {
+function Modal({ modalContent, closeModal, submitModal, submitIcon, submitClass }) {
   return (
     <>
       <Blur onClick={closeModal} />
       <ModalBody>
-        Modal content
+        {modalContent}
+        <Break />
         <Section>
-          <CloseModalButton closeModal={closeModal} />
           <GenericButton
             id="modalSubmitBtn"
-            iconName="check"
-            className="btn-selected"
+            iconName={submitIcon}
+            className={submitClass}
             onClick={submitModal}
           />
+          <CloseModalButton closeModal={closeModal} />
         </Section>
       </ModalBody>
     </>
@@ -52,12 +52,17 @@ function Modal({ closeModal, submitModal }) {
 }
 
 Modal.propTypes = {
+  modalContent: PropTypes.object.isRequired,
   closeModal: PropTypes.func.isRequired,
   submitModal: PropTypes.func,
+  submitIcon: PropTypes.string,
+  submitClass: PropTypes.string,
 };
 
 Modal.defaultProps = {
   submitModal: () => {},
+  submitIcon: "check",
+  submitClass: "btn-selected"
 };
 
 export default Modal;
