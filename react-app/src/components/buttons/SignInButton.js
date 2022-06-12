@@ -1,10 +1,9 @@
 import React from 'react';
-import { signInUser } from '../../supabase/auth';
+import { signInUser } from '../../api/auth';
+import GenericButton from '../generics/GenericButton';
 
 export default function SignInButton() {
   return (
-    <button type="button" className="btn btn-success" onClick={signInUser}>
-      Sign In
-    </button>
+    <GenericButton className="btn-selected" iconName="sign-in-alt" onClick={signInUser} />
   );
 }

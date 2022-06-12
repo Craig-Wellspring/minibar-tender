@@ -21,3 +21,23 @@
   padding: 6px 12px;
   font-size: 24px;
 }
+
+.btn-selected {
+  background-color: $btnSelectedColor;
+}
+
+.btn-unselected {
+  background-color: $btnUnselectedColor;
+}
+
+.btn-danger {
+  background-color: $btnDangerColor;
+}
+
+.btn-info {
+  background-color: $btnInfoColor;
+}
+
+.btn-warning {
+  background-color: $btnWarningColor;
+}

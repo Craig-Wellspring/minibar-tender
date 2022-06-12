@@ -2,15 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router";
 import GenericButton from "../generics/GenericButton";
 
-export default function NewBarButton() {
+export default function BackButton() {
   const navigate = useNavigate();
 
   return (
     <GenericButton
-      className="btn-selected"
-      style={{ width: "100%", marginTop: "15px" }}
-      iconName="plus"
-      onClick={() => navigate("/newbar")}
+      className="btn-danger"
+      iconName="angle-double-left"
+      onClick={() => navigate(-1)}
     />
   );
 }

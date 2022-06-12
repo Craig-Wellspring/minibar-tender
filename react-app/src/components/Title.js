@@ -1,10 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import styled from "styled-components";
 
-export default function Title({ title }) {
-  return <div id="title">{title}</div>;
+const Container = styled.div`
+  text-align: center;
+  font-size: 130%;
+`;
+
+export default function Title({ title, style }) {
+  return <Container style={style}>{title}</Container>;
 }
-
-Title.propTypes = {
-  title: PropTypes.string.isRequired,
-};

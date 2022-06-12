@@ -1,39 +1,20 @@
 body {
   background-color: $bgColor !important;
+  margin: 0;
 }
 
 #root {
   color: $mainTextColor;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-#headerContainer {
-  display: flex;
-  justify-content: space-between;
-
-  padding: 10px;
-}
-
-#header {
-  text-align: center;
-  font-size: 18pt;
-}
-
-#title {
-  text-align: center;
-  margin-bottom: 10px;
 }
 
 #body {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   justify-content: center;
 
   padding: 10px;
-  border: 1px solid $borderColor;
-  border-radius: 4px;
+  // border: 1px solid $borderColor;
   margin: 10px;
+  border-radius: 4px;
 }

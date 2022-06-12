@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../supabase/auth';
+import { supabase } from '../api/auth';
 import Routing from '../routes';
 import Header from './Header';
 import SignIn from './views/SignIn';

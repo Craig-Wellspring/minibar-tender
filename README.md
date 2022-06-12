@@ -1,6 +1,8 @@
 # Mini-bar Tender
 ## Developed by Craig Wellspring
 
+Built for inventory tracking and POS functions in single bartender, single barback mini-bar operations.
+
 [Deployed Site](https://minibartender.netlify.app)
 
 [Git Repository](https://github.com/Craig-Wellspring/minibar-tender)  
