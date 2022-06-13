@@ -6,6 +6,8 @@ import OpenBar from "../listables/OpenBar";
 import Title from "../Title";
 import Modal from "../generics/Modal";
 import BarSelectModal from "../modal-content/BarSelectModal";
+import { getCurrentUser } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const defaultBarData = {
   id: "",
@@ -19,6 +21,8 @@ const defaultBarData = {
 };
 
 export default function BarSelect() {
+  const navigate = useNavigate();
+
   const [openBarsList, setOpenBarsList] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -34,7 +38,14 @@ export default function BarSelect() {
 
   // Selection
   const selectBar = (barData) => {
-    showBarModal(barData)
+    const uid = getCurrentUser().id;
+    if (barData.server_id === uid) {
+      navigate(`/serverops/${barData.id}`);
+    }
+    if (barData.stocker_id === uid) {
+      navigate(`/stockerops/${barData.id}`);
+    }
+    showBarModal(barData);
   };
 
   // Modal control
@@ -45,7 +56,7 @@ export default function BarSelect() {
   const showBarModal = (barData) => {
     setBarModalData(barData);
     setShowModal(true);
-  }
+  };
 
   const editBarButton = () => {
     console.warn("go to bar edit form", barModalData.id);
@@ -56,13 +67,18 @@ export default function BarSelect() {
       <Title title="Bar Select" />
       <ColumnSection>
         {openBarsList.map((openBarInfo) => (
-          <OpenBar key={openBarInfo.id} barInfo={openBarInfo} selectBar={selectBar} />
+          <OpenBar
+            key={openBarInfo.id}
+            barInfo={openBarInfo}
+            selectBar={selectBar}
+          />
         ))}
       </ColumnSection>
       <NewBarButton />
 
       {showModal && (
         <Modal
+          title="Bar Management"
           modalContent={<BarSelectModal modalData={barModalData} />}
           closeModal={closeBarModal}
           submitModal={editBarButton}

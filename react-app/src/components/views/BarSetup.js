@@ -41,7 +41,7 @@ const defaultDrinkData = {
   default_drink: true,
 };
 
-export default function NewBar() {
+export default function BarSetup() {
   const navigate = useNavigate();
 
   const [currentDate, setDate] = useState(null);
@@ -298,7 +298,8 @@ export default function NewBar() {
 
       {showModal && (
         <Modal
-          id="drinkFormModal"
+          id="drink-form-modal"
+          title={`${drinkModalData.id ? "Edit" : "Add a"} Drink Option`}
           modalContent={
             <AvailableDrinkModal
               drinkObj={drinkModalData}

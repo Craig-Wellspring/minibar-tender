@@ -10,7 +10,7 @@ export default function NewBarButton() {
       className="btn-selected"
       style={{ width: "100%", marginTop: "15px" }}
       iconName="plus"
-      onClick={() => navigate("/newbar")}
+      onClick={() => navigate("/barsetup")}
     />
   );
 }
