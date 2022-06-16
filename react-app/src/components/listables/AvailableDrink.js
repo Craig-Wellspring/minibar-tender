@@ -54,15 +54,11 @@ const drinkTypeIcons = {
 
 function AvailableDrink({
   drink,
-  selectDrink,
-  selected,
-  setDrinkPrice,
-  setStartCount,
-  setPackageCount,
+  updateDrinkData,
   showDeleteBtns,
   deleteDrinkBtn,
   showEditBtns,
-  openEditDrinkModal,
+  openDrinkModal,
 }) {
   return (
     <DrinkObj>
@@ -77,9 +73,9 @@ function AvailableDrink({
           />
         )}
         <DrinkButton
-          className={`btn-${selected ? "selected" : "unselected"}`}
+          className={`btn-${drink.isSelected ? "selected" : "unselected"}`}
           onClick={() => {
-            selectDrink(drink);
+            updateDrinkData(drink, "isSelected", !drink.isSelected);
           }}
         >
           {drink.drink_name}
@@ -89,7 +85,7 @@ function AvailableDrink({
             iconName="pen"
             className="btn-info"
             onClick={() => {
-              openEditDrinkModal(drink);
+              openDrinkModal(drink);
             }}
           />
         )}
@@ -100,10 +96,8 @@ function AvailableDrink({
           <NumberInput
             defaultValue={drink.price}
             onChange={(e) => {
-              setDrinkPrice(drink, e.target.value);
-              // drink.price = e.target.value;
+              updateDrinkData(drink, "price", e.target.value);
             }}
-            value={drink.price}
           />
         </CompactSection>
         <CompactSection id="start-count-input">
@@ -111,8 +105,7 @@ function AvailableDrink({
           <NumberInput
             defaultValue={drink.start_count}
             onChange={(e) => {
-              setStartCount(drink, e.target.value);
-              drink.start_count = e.target.value;
+              updateDrinkData(drink, "start_count", e.target.value);
             }}
           />
         </CompactSection>
@@ -125,8 +118,7 @@ function AvailableDrink({
           <NumberInput
             defaultValue={drink.package_count}
             onChange={(e) => {
-              setPackageCount(drink, e.target.value);
-              drink.package_count = e.target.value;
+              updateDrinkData(drink, "package_count", e.target.value);
             }}
           />
         </CompactSection>
@@ -137,15 +129,11 @@ function AvailableDrink({
 
 AvailableDrink.propTypes = {
   drink: PropTypes.shape().isRequired,
-  selectDrink: PropTypes.func.isRequired,
-  selected: PropTypes.bool.isRequired,
-  setDrinkPrice: PropTypes.func.isRequired,
-  setStartCount: PropTypes.func.isRequired,
-  setPackageCount: PropTypes.func.isRequired,
+  updateDrinkData: PropTypes.func.isRequired,
   showDeleteBtns: PropTypes.bool.isRequired,
   deleteDrinkBtn: PropTypes.func.isRequired,
   showEditBtns: PropTypes.bool.isRequired,
-  openEditDrinkModal: PropTypes.func.isRequired,
+  openDrinkModal: PropTypes.func.isRequired,
 };
 
 export default AvailableDrink;

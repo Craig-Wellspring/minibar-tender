@@ -20,7 +20,7 @@ import LoadingIcon from "../buttons/LoadingIcon";
 import { ColumnSection, Section } from "../generics/StyledComponents";
 import Modal from "../generics/Modal";
 import AvailableDrinkModal from "../modal-content/AvailableDrinkModal";
-import { sortedMerge } from "../generics/HelperFunctions";
+import { sortDrinkListByName, sortedMerge } from "../generics/HelperFunctions";
 
 const Body = styled.div`
   display: flex;
@@ -53,11 +53,6 @@ export default function BarSetup() {
   const [floor, setFloor] = useState(1);
   const [stockerOnly, setStockerOnly] = useState(true);
 
-  const [selectedDrinks, setSelectedDrinks] = useState([]);
-  const [unselectedDrinks, setUnselectedDrinks] = useState([]);
-  const [listedDrinks, setListedDrinks] = useState([]);
-
-  // Deprecate \\
   const [availableDrinks, setAvailableDrinks] = useState([]);
 
   const [showDeleteBtns, setShowDeleteBtns] = useState(false);
@@ -89,110 +84,77 @@ export default function BarSetup() {
     }
   };
 
-  // Handle Drink options
+  // Handle Drinks
   const populateDrinks = async () => {
-    const allDrinksList = await getAllAvailableDrinks();
-    const selectedDrinksList = [];
-    const unselectedDrinksList = [];
+    let allDrinksList = await getAllAvailableDrinks();
+
     if (barID) {
-      // Sort drinks into lists based on if they are stocked in the bar being edited
+      // Bar is being edited
       const stockedDrinks = await getStockedDrinks(barID);
       const stockedDrinkNames = stockedDrinks?.map((d) => d.drink_name);
-      allDrinksList.forEach((d) => {
-        if (stockedDrinkNames?.includes(d.drink_name))
-          selectedDrinksList.push(d);
-        else unselectedDrinksList.push(d);
+      allDrinksList = allDrinksList.map((d) => {
+        const stockedDrinkData = stockedDrinks.find(
+          (obj) => obj.drink_name === d.drink_name
+        );
+        return {
+          ...d,
+          price: stockedDrinkData?.price || d.price,
+          start_count: stockedDrinkData?.start_count || d.start_count,
+          package_count: stockedDrinkData?.package_count || d.package_count,
+          isSelected: stockedDrinkNames?.includes(d.drink_name),
+        };
       });
     } else {
-      // Sort drinks into lists based on their default settings
-      allDrinksList.forEach((d) => {
-        if (d.default_drink) selectedDrinksList.push(d);
-        else unselectedDrinksList.push(d);
-      });
+      // Creating new bar
+      allDrinksList = allDrinksList.map(
+        (d) => (d = { ...d, isSelected: d.default_drink })
+      );
     }
-    setSelectedDrinks(selectedDrinksList);
-    setUnselectedDrinks(unselectedDrinksList);
-    setListedDrinks(sortedMerge([selectedDrinksList, unselectedDrinksList]));
+
+    setAvailableDrinks(sortDrinkListByName(allDrinksList));
   };
 
-  const toggleDrink = (drink) => {
-    if (selectedDrinks.map((d) => d.id).includes(drink.id)) {
-      unselectDrink(drink);
-    } else {
-      selectDrink(drink);
+  const updateDrinkData = (drink, key, value) => {
+    if (value !== null) {
+      const otherDrinks = availableDrinks.filter((d) => d.id !== drink.id);
+      drink[key] = value;
+      setAvailableDrinks(sortDrinkListByName([...otherDrinks, drink]));
     }
   };
-
-  const selectDrink = (drink) => {
-    setSelectedDrinks([...selectedDrinks, drink]);
-  }
-
-  const unselectDrink = (drink) => {
-    setSelectedDrinks(selectedDrinks.filter((d) => d.id !== drink.id));
-  };
-
-  const drinkIsSelected = (drink) => {
-    if (selectedDrinks.filter((d) => d.name === drink.name).length > 0)
-      return true;
-    return false;
-  };
-
 
   const deleteDrinkBtn = (drinkID) => {
     deleteDrink(drinkID);
-    setAvailableDrinks(availableDrinks.filter((d) => d.id !== drinkID));
+    setAvailableDrinks(
+      sortDrinkListByName(availableDrinks.filter((d) => d.id !== drinkID))
+    );
   };
 
-  const setDrinkPrice = (drink, newPrice) => {
-    if (newPrice && drinkIsSelected(drink)) {
-      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
-      drink.price = newPrice;
-      setSelectedDrinks([...otherDrinks, drink]);
-    }
-  };
-
-  const setStartCount = (drink, newStartCount) => {
-    if (newStartCount && drinkIsSelected(drink)) {
-      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
-      drink.start_count = newStartCount;
-      setSelectedDrinks([...otherDrinks, drink]);
-    }
-  };
-
-  const setPackageCount = (drink, newPackageCount) => {
-    if (newPackageCount && drinkIsSelected(drink)) {
-      const otherDrinks = selectedDrinks.filter((d) => d.id !== drink.id);
-      drink.package_count = newPackageCount;
-      setSelectedDrinks([...otherDrinks, drink]);
-    }
-  };
-
-  const openNewDrinkModal = () => {
+  // Handle Modal
+  const openDrinkModal = (drinkData) => {
     setShowModal(true);
-    setDrinkModalData(defaultDrinkData);
+    setDrinkModalData(drinkData || defaultDrinkData);
     window.scrollTo(0, 0);
   };
 
-  const submitNewDrink = async (drinkObj) => {
-    const newDrinkObj = await addNewDrink(drinkObj);
-    setAvailableDrinks([...availableDrinks, newDrinkObj]);
-    closeDrinkModal();
-  };
+  const submitDrinkModal = async (drinkObj) => {
+    let otherDrinks = availableDrinks;
 
-  const openEditDrinkModal = (drinkData) => {
-    setShowModal(true);
-    setDrinkModalData(drinkData);
-    window.scrollTo(0, 0);
-  };
+    if (drinkModalData.id) {
+      // Submit edit
+      otherDrinks = availableDrinks.filter((d) => d.id !== drinkObj.id);
+      delete drinkObj.isSelected;
+      drinkObj = await updateDrink(drinkObj);
+    } else {
+      // Submit new
+      drinkObj = await addNewDrink(drinkObj);
+    }
 
-  const submitEditDrink = async (drinkObj) => {
-    closeDrinkModal();
-    const filteredList = availableDrinks.filter((d) => d.id !== drinkObj.id);
-    const updatedDrinkObj = await updateDrink(drinkObj);
-    setAvailableDrinks([...filteredList, updatedDrinkObj]);
-  };
-
-  const closeDrinkModal = () => {
+    setAvailableDrinks(
+      sortDrinkListByName([
+        ...otherDrinks,
+        { ...drinkObj, isSelected: drinkObj.default_drink },
+      ])
+    );
     setShowModal(false);
   };
 
@@ -212,6 +174,7 @@ export default function BarSetup() {
 
     // Stock new bar with each drink
     const drinksToStock = [];
+    const selectedDrinks = availableDrinks.filter((d) => d.isSelected);
     selectedDrinks.forEach((drink) => {
       const newDrinkObj = {
         drink_name: drink.drink_name,
@@ -230,9 +193,8 @@ export default function BarSetup() {
   };
 
   const submitEditBar = () => {
-    const combinedlists = sortedMerge([selectedDrinks, availableDrinks]);
-    console.warn(combinedlists);
-
+    // const combinedlists = sortedMerge([selectedDrinks, availableDrinks]);
+    // console.warn(combinedlists);
     // Return to bar select
     // navigate("/barselect");
   };
@@ -274,19 +236,15 @@ export default function BarSetup() {
 
       <ColumnSection id="drinkSelectionSection">
         <Title title="Select Drinks" />
-        {listedDrinks.map((drink) => (
+        {availableDrinks.map((drink) => (
           <AvailableDrink
             key={drink.id}
             drink={drink}
-            selectDrink={toggleDrink}
-            selected={selectedDrinks.map((d) => d.id).includes(drink.id)}
-            setDrinkPrice={setDrinkPrice}
-            setStartCount={setStartCount}
-            setPackageCount={setPackageCount}
+            updateDrinkData={updateDrinkData}
             showDeleteBtns={showDeleteBtns}
             deleteDrinkBtn={deleteDrinkBtn}
             showEditBtns={showEditBtns}
-            openEditDrinkModal={openEditDrinkModal}
+            openDrinkModal={openDrinkModal}
           />
         ))}
         <Section id="drink-management-buttons">
@@ -306,7 +264,7 @@ export default function BarSetup() {
             iconName="plus"
             style={barID ? { width: "240px" } : { width: "120px" }}
             onClick={() => {
-              openNewDrinkModal();
+              openDrinkModal();
             }}
           />
           {!barID && (
@@ -361,14 +319,10 @@ export default function BarSetup() {
             />
           }
           closeModal={() => {
-            closeDrinkModal();
+            setShowModal(false);
           }}
           submitModal={() => {
-            if (drinkModalData.id) {
-              submitEditDrink(drinkModalData);
-            } else {
-              submitNewDrink(drinkModalData);
-            }
+            submitDrinkModal(drinkModalData);
           }}
           submitIcon={drinkModalData.id ? "check-double" : "check"}
           submitClass={drinkModalData.id ? "btn-info" : "btn-selected"}
