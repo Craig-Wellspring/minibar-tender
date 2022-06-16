@@ -6,6 +6,9 @@ import OpenBar from "../listables/OpenBar";
 import Title from "../Title";
 import Modal from "../generics/Modal";
 import BarSelectModal from "../modal-content/BarSelectModal";
+import { getCurrentUser } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
+import LargeLoading from "../generics/LargeLoading";
 
 const defaultBarData = {
   id: "",
@@ -19,6 +22,10 @@ const defaultBarData = {
 };
 
 export default function BarSelect() {
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(true);
+
   const [openBarsList, setOpenBarsList] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -27,44 +34,58 @@ export default function BarSelect() {
   // Initialize
   useEffect(() => {
     (async function () {
-      let openBars = await getOpenBars();
-      setOpenBarsList(openBars.data);
+      const openBars = await getOpenBars();
+      setOpenBarsList(openBars);
+      setIsLoading(false);
     })();
   }, []);
 
   // Selection
   const selectBar = (barData) => {
-    showBarModal(barData)
+    const uid = getCurrentUser().id;
+    if (barData.server_id === uid) {
+      navigate(`/serverops/${barData.id}`);
+    }
+    if (barData.stocker_id === uid) {
+      navigate(`/stockerops/${barData.id}`);
+    }
+    showBarModal(barData);
   };
 
   // Modal control
-  const closeBarModal = () => {
-    setShowModal(false);
-  };
-
   const showBarModal = (barData) => {
     setBarModalData(barData);
     setShowModal(true);
-  }
+  };
 
   const editBarButton = () => {
-    console.warn("go to bar edit form", barModalData.id);
+    navigate(`/barsetup/${barModalData.id}`);
   };
 
   return (
     <>
       <Title title="Bar Select" />
-      <ColumnSection>
-        {openBarsList.map((openBarInfo) => (
-          <OpenBar key={openBarInfo.id} barInfo={openBarInfo} selectBar={selectBar} />
-        ))}
-      </ColumnSection>
+
+      {isLoading ? (
+        <LargeLoading />
+      ) : (
+        <ColumnSection style={{ width: "100%" }}>
+          {openBarsList.map((openBarInfo) => (
+            <OpenBar
+              key={openBarInfo.id}
+              barInfo={openBarInfo}
+              selectBar={selectBar}
+            />
+          ))}
+        </ColumnSection>
+      )}
       <NewBarButton />
 
       {showModal && (
         <Modal
+          title="Bar Management"
           modalContent={<BarSelectModal modalData={barModalData} />}
-          closeModal={closeBarModal}
+          closeModal={() => setShowModal(false)}
           submitModal={editBarButton}
           submitIcon="edit"
           submitClass="btn-info"

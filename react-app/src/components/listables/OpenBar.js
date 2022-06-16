@@ -11,19 +11,18 @@ const OpenBarButton = styled.div`
 `;
 
 export default function OpenBar({ barInfo, selectBar }) {
-  function getRoleIcon() {
-    let iconName = "";
-    if (barInfo.server_id === getCurrentUser().id) {
-      iconName = "fa-cash-register";
-    } else if (barInfo.stocker_id === getCurrentUser().id) {
-      iconName = "fa-dolly";
-    } else {
-      iconName = "fa-user-alt-slash";
+  const getRoleIcon = () => {
+    const uid = getCurrentUser().id;
+    if (barInfo.server_id === uid) {
+      return "fa-cash-register";
     }
-    return iconName;
-  }
+    if (barInfo.stocker_id === uid) {
+      return "fa-dolly";
+    }
+    return "fa-user-alt-slash";
+  };
 
-  function getBarColor() {
+  const getBarColor = () => {
     let colorClass = "";
     if (barInfo.stocker_only) {
       colorClass = barInfo.stocker_id ? "selected" : "danger";
@@ -40,7 +39,7 @@ export default function OpenBar({ barInfo, selectBar }) {
       }
     }
     return colorClass;
-  }
+  };
 
   return (
     <OpenBarButton

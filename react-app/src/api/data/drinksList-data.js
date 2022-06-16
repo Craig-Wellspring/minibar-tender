@@ -1,7 +1,7 @@
 import { supabase } from "../auth";
 
 // GET DRINKS
-const getDrinksList = async () => {
+const getAllAvailableDrinks = async () => {
   let { data: availableDrinks } = await supabase
     .from("Available Drinks")
     .select("*");
@@ -36,4 +36,4 @@ const updateDrink = async (drinkObj) => {
   return updatedDrinkObj[0];
 };
 
-export { getDrinksList, getSingleDrink, addNewDrink, deleteDrink, updateDrink };
+export { getAllAvailableDrinks, getSingleDrink, addNewDrink, deleteDrink, updateDrink };

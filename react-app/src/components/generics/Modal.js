@@ -4,6 +4,7 @@ import CloseModalButton from "../buttons/CloseModalButton";
 import GenericButton from "./GenericButton";
 import { Section, ColumnSection, Break } from "./StyledComponents";
 import styled from "styled-components";
+import Title from "../Title";
 
 const Blur = styled.div`
   position: fixed;
@@ -30,21 +31,30 @@ const ModalBody = styled(ColumnSection)`
   border-radius: 4px;
 `;
 
-function Modal({ modalContent, closeModal, submitModal, submitIcon, submitClass }) {
+function Modal({
+  title,
+  modalContent,
+  closeModal,
+  submitModal,
+  submitIcon,
+  submitClass,
+}) {
   return (
     <>
       <Blur onClick={closeModal} />
       <ModalBody>
-        {modalContent}
+        <Title title={title} />
+        <Break />
+        <div style={{ width: "80%" }}>{modalContent}</div>
         <Break />
         <Section>
+          <CloseModalButton closeModal={closeModal} />
           <GenericButton
             id="modalSubmitBtn"
             iconName={submitIcon}
             className={submitClass}
             onClick={submitModal}
           />
-          <CloseModalButton closeModal={closeModal} />
         </Section>
       </ModalBody>
     </>
@@ -52,6 +62,7 @@ function Modal({ modalContent, closeModal, submitModal, submitIcon, submitClass 
 }
 
 Modal.propTypes = {
+  title: PropTypes.string.isRequired,
   modalContent: PropTypes.object.isRequired,
   closeModal: PropTypes.func.isRequired,
   submitModal: PropTypes.func,
@@ -62,7 +73,7 @@ Modal.propTypes = {
 Modal.defaultProps = {
   submitModal: () => {},
   submitIcon: "check",
-  submitClass: "btn-selected"
+  submitClass: "btn-selected",
 };
 
 export default Modal;

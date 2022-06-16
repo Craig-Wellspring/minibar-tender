@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '../api/auth';
-import Routing from '../routes';
-import Header from './Header';
-import SignIn from './views/SignIn';
+import React, { useEffect, useState } from "react";
+import { supabase } from "../api/auth";
+import Routing from "../routes";
+import Header from "./Header";
+import SignIn from "./views/SignIn";
+import styled from "styled-components";
+import { ColumnSection } from "./generics/StyledComponents";
+
+const AppBody = styled(ColumnSection)`
+  padding: 20px;
+`;
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -17,13 +23,7 @@ export default function App() {
   return (
     <>
       <Header session={session} />
-      {session ? (
-        <div id="body">
-          <Routing />
-        </div>
-      ) : (
-        <SignIn />
-      )}
+      <AppBody>{session ? <Routing /> : <SignIn />}</AppBody>
     </>
   );
 }

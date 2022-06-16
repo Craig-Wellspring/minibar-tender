@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import SignOutButton from "./buttons/SignOutButton";
 import styled from "styled-components";
+import SignInButton from "./buttons/SignInButton";
 
 const HeaderBar = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ export default function Header({ session }) {
   return (
     <HeaderBar>
       MinibarTender
-      {session ? <SignOutButton /> : null}
+      {session ? <SignOutButton /> : <SignInButton />}
     </HeaderBar>
   );
 }

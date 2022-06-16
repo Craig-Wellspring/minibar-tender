@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const ColumnSection = styled.div`
   display: flex;
@@ -16,6 +16,7 @@ export const Section = styled.div`
   gap: 10px;
 `;
 
-export const Break = styled.span`
+export const Break = styled.div`
+  width: 100%;
   border-bottom: 1px solid white;
 `;

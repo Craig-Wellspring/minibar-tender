@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { Break, ColumnSection, Section } from "../generics/StyledComponents";
+import { ColumnSection, Section } from "../generics/StyledComponents";
 import Title from "../Title";
 import NumberInput from "../generics/NumberInput";
 
@@ -31,8 +31,6 @@ const TypeDropdown = styled.select`
 function AvailableDrinkModal({ drinkObj, setModalData }) {
   return (
     <ColumnSection>
-      <Title title={`${drinkObj.id ? "Edit" : "Add New"} Drink`} />
-      <Break />
       <ModalGrid>
         <Title title="Name" style={{ gridColumn: "1 / span 2" }} />
         <Title title="Price" />

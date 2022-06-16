@@ -17,25 +17,25 @@ const StaffingButton = styled(Section)`
 
 export default function BarSelectModal({ modalData }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState("");
 
   const selectServer = async () => {
-    if (!loading) {
+    if (!isLoading) {
       if (!modalData.server_id) {
         const currentUser = getCurrentUser();
         const userID = currentUser.id;
         const userName = currentUser.user_metadata.full_name;
-        setLoading(true);
+        setIsLoading(true);
 
-        // Update openBar data with server info
+        // Update openBar data with server info (Sign in to Bar)
         await updateBar(modalData.id, {
           server_id: userID,
           server_name: userName,
         });
 
         // Navigate to Server operations
-        navigate("/serverops");
+        navigate(`/serverops/${modalData.id}`);
       } else {
         setErrorText("Server already assigned.");
       }
@@ -43,12 +43,12 @@ export default function BarSelectModal({ modalData }) {
   };
 
   const selectStocker = async () => {
-    if (!loading) {
+    if (!isLoading) {
       if (!modalData.stocker_id) {
         const currentUser = getCurrentUser();
         const userID = currentUser.id;
         const userName = currentUser.user_metadata.full_name;
-        setLoading(true);
+        setIsLoading(true);
 
         // Update openBar data with stocker info
         await updateBar(modalData.id, {
@@ -57,7 +57,7 @@ export default function BarSelectModal({ modalData }) {
         });
 
         // Navigate to Stocker operations
-        navigate("/stockerops");
+        navigate(`/stockerops/${modalData.id}`);
       } else {
         setErrorText("Stocker already assigned.");
       }
@@ -65,13 +65,9 @@ export default function BarSelectModal({ modalData }) {
   };
 
   return (
-    <ColumnSection style={{ width: "80%" }}>
-      <Title title="Bar Management" />
-      <Break />
-
-      <Section>
-        Date: {String(modalData.bar_date).substring(5)} / Floor:{" "}
-        {modalData.floor}
+    <ColumnSection>
+      <Section id="date-section">
+        Floor: {modalData.floor} | {String(modalData.bar_date).substring(5)}
       </Section>
 
       <ColumnSection id="staffing-buttons" style={{ width: "100%" }}>
@@ -88,7 +84,7 @@ export default function BarSelectModal({ modalData }) {
             {!modalData.server_id && (
               <i
                 className={`no-click fas fa-${
-                  loading ? "spinner fa-spin" : "sign-in-alt"
+                  isLoading ? "spinner fa-spin" : "sign-in-alt"
                 }`}
               />
             )}
@@ -107,7 +103,7 @@ export default function BarSelectModal({ modalData }) {
           {!modalData.stocker_id && (
             <i
               className={`no-click fas fa-${
-                loading ? "spinner fa-spin" : "sign-in-alt"
+                isLoading ? "spinner fa-spin" : "sign-in-alt"
               }`}
             />
           )}

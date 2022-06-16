@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import GenericButton from "../generics/GenericButton";
@@ -54,25 +54,28 @@ const drinkTypeIcons = {
 
 function AvailableDrink({
   drink,
-  selectDrink,
-  setDrinkPrice,
-  setStartCount,
-  setPackageCount,
+  updateDrinkData,
   showDeleteBtns,
   deleteDrinkBtn,
   showEditBtns,
-  openEditDrinkModal,
+  openDrinkModal,
 }) {
-  const [isSelected, setIsSelected] = useState(drink.default_drink);
-
   return (
     <DrinkObj>
       <CompactSection style={{ width: "100%" }}>
+        {showDeleteBtns && (
+          <GenericButton
+            iconName="trash-alt"
+            className="btn-danger"
+            onClick={() => {
+              deleteDrinkBtn(drink.id);
+            }}
+          />
+        )}
         <DrinkButton
-          className={`btn-${isSelected ? "selected" : "unselected"}`}
+          className={`btn-${drink.isSelected ? "selected" : "unselected"}`}
           onClick={() => {
-            selectDrink(drink);
-            setIsSelected(!isSelected);
+            updateDrinkData(drink, "isSelected", !drink.isSelected);
           }}
         >
           {drink.drink_name}
@@ -82,17 +85,7 @@ function AvailableDrink({
             iconName="pen"
             className="btn-info"
             onClick={() => {
-              openEditDrinkModal(drink);
-            }}
-          />
-        )}
-        {showDeleteBtns && (
-          <GenericButton
-            style={{ marginLeft: "5px" }}
-            iconName="trash-alt"
-            className="btn-danger"
-            onClick={() => {
-              deleteDrinkBtn(drink.id);
+              openDrinkModal(drink);
             }}
           />
         )}
@@ -103,8 +96,7 @@ function AvailableDrink({
           <NumberInput
             defaultValue={drink.price}
             onChange={(e) => {
-              setDrinkPrice(drink, e.target.value);
-              drink.price = e.target.value;
+              updateDrinkData(drink, "price", e.target.value);
             }}
           />
         </CompactSection>
@@ -113,8 +105,7 @@ function AvailableDrink({
           <NumberInput
             defaultValue={drink.start_count}
             onChange={(e) => {
-              setStartCount(drink, e.target.value);
-              drink.start_count = e.target.value;
+              updateDrinkData(drink, "start_count", e.target.value);
             }}
           />
         </CompactSection>
@@ -127,8 +118,7 @@ function AvailableDrink({
           <NumberInput
             defaultValue={drink.package_count}
             onChange={(e) => {
-              setPackageCount(drink, e.target.value);
-              drink.package_count = e.target.value;
+              updateDrinkData(drink, "package_count", e.target.value);
             }}
           />
         </CompactSection>
@@ -139,14 +129,11 @@ function AvailableDrink({
 
 AvailableDrink.propTypes = {
   drink: PropTypes.shape().isRequired,
-  selectDrink: PropTypes.func.isRequired,
-  setDrinkPrice: PropTypes.func.isRequired,
-  setStartCount: PropTypes.func.isRequired,
-  setPackageCount: PropTypes.func.isRequired,
+  updateDrinkData: PropTypes.func.isRequired,
   showDeleteBtns: PropTypes.bool.isRequired,
   deleteDrinkBtn: PropTypes.func.isRequired,
   showEditBtns: PropTypes.bool.isRequired,
-  openEditDrinkModal: PropTypes.func.isRequired,
+  openDrinkModal: PropTypes.func.isRequired,
 };
 
 export default AvailableDrink;

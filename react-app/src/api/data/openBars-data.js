@@ -9,11 +9,14 @@ const getOpenBars = async () => {
     .select("*")
     .eq("store_id", storeId);
 
-  return openBars;
+  return openBars.data;
 };
 
 // GET SINGLE OPEN BAR
-const getOpenBar = async (barId) => {};
+const getOpenBar = async (barID) => {
+  const openBar = await supabase.from("Open Bars").select("*").eq("id", barID);
+  return openBar.data[0];
+};
 
 // CREATE NEW BAR
 const createNewBar = async (newBarInfoObj) => {
