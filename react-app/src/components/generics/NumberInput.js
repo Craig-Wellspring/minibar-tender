@@ -7,7 +7,7 @@ const Input = styled.input`
   text-align: center;
   margin: 4px;
   padding: 5px;
-  font-size: 20px;
+  font-size: 18px;
 `;
 
 export default function NumberInput({ defaultValue, className, onChange, style }) {

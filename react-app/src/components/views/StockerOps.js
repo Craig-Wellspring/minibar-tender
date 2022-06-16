@@ -11,11 +11,14 @@ import { getStockedDrinks } from "../../api/data/stockedDrinks-data";
 import Modal from "../generics/Modal";
 import StockerWrapupModal from "../modal-content/StockerWrapupModal";
 import LargeLoading from "../generics/LargeLoading";
+import LoadingIcon from "../generics/LoadingIcon";
+import { sortDrinkListByName } from "../generics/HelperFunctions";
 
 function StockerOps() {
   const { barID } = useParams();
 
   const [isLoading, setIsLoading] = useState(2);
+  const [cartLoading, setCartLoading] = useState(false);
 
   const [barInfo, setBarInfo] = useState({});
 
@@ -24,18 +27,7 @@ function StockerOps() {
 
   const [showWrapupModal, setShowWrapupModal] = useState(false);
 
-  const clearCart = () => {
-    drinkRef.current?.map((drink) => drink.clearCart());
-  };
-
-  const openWrapupModal = () => {
-    setShowWrapupModal(true);
-  };
-
-  const submitWrapupModal = () => {
-    console.warn("submit bar wrapup");
-  };
-
+  // Initialize
   useEffect(() => {
     let isMounted = true;
     (async function () {
@@ -54,8 +46,12 @@ function StockerOps() {
     let isMounted = true;
     (async function () {
       const stockedDrinks = await getStockedDrinks(barID);
+      const drinksWithEndCountKey = stockedDrinks.map((drink) => ({
+        ...drink,
+        end_count: 0,
+      }));
       if (isMounted) {
-        setDrinksList(stockedDrinks);
+        setDrinksList(sortDrinkListByName(drinksWithEndCountKey));
         setIsLoading((prevState) => prevState - 1);
       }
     })();
@@ -63,6 +59,34 @@ function StockerOps() {
       isMounted = false;
     };
   }, [barID]);
+
+  // Cart Control
+  const submitCart = async () => {
+    setCartLoading(true);
+    await Promise.all(drinkRef.current?.map((d) => d.submitCart()));
+    setCartLoading(false);
+  };
+
+  const clearCart = () => {
+    drinkRef.current?.map((d) => d.clearCart());
+  };
+
+  // Modal Control
+  const openWrapupModal = () => {
+    setShowWrapupModal(true);
+  };
+
+  const submitWrapupModal = () => {
+    console.warn(drinksList);
+  };
+
+  const updateDrinkEndCount = (drink, value) => {
+    if (value) {
+      const otherDrinks = drinksList.filter((d) => d.id !== drink.id);
+      drink.end_count = value;
+      setDrinksList(sortDrinkListByName([...otherDrinks, drink]));
+    }
+  };
 
   return (
     <>
@@ -96,7 +120,15 @@ function StockerOps() {
               iconName="eraser"
               onClick={clearCart}
             />
-            <GenericButton className="btn-selected" iconName="dolly" />
+            {cartLoading ? (
+              <LoadingIcon />
+            ) : (
+              <GenericButton
+                className="btn-selected"
+                iconName="dolly"
+                onClick={submitCart}
+              />
+            )}
           </Section>
         </>
       )}
@@ -116,7 +148,13 @@ function StockerOps() {
       {showWrapupModal && (
         <Modal
           title="Bar Wrap-up"
-          modalContent={<StockerWrapupModal />}
+          modalContent={
+            <StockerWrapupModal
+              barData={barInfo}
+              drinks={drinksList}
+              updateDrinkEndCount={updateDrinkEndCount}
+            />
+          }
           closeModal={() => setShowWrapupModal(false)}
           submitModal={submitWrapupModal}
         />

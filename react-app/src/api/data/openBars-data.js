@@ -19,20 +19,19 @@ const getOpenBar = async (barID) => {
 };
 
 // CREATE NEW BAR
-const createNewBar = async (newBarInfoObj) => {
-  const { data } = await supabase.from("Open Bars").insert([newBarInfoObj]);
+const createNewBar = async (newBarDataObj) => {
+  const { data } = await supabase.from("Open Bars").insert([newBarDataObj]);
 
   return data[0].id;
 };
 
 // GET BAR INVENTORY
-const getBarInventory = async (barKey) => {};
-
-// DELETE BAR
-const deleteBar = async (barId) => {};
+const getBarInventory = async (barID) => {};
 
 // CLOSE BAR AND UNSTOCK DRINKS FROM INVENTORY
-const closeBar = async (barKey) => {};
+const closeBar = async (barID) => {
+  await supabase.from("Open Bars").delete().eq("id", barID);
+};
 
 // UPDATE BAR
 const updateBar = async (barID, updateObject) => {
@@ -43,7 +42,6 @@ export {
   getOpenBars,
   getOpenBar,
   createNewBar,
-  deleteBar,
   closeBar,
   updateBar,
   getBarInventory,

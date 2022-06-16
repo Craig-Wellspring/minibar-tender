@@ -6,15 +6,3 @@ body {
 #root {
   color: $mainTextColor;
 }
-
-#body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-
-  padding: 10px;
-  // border: 1px solid $borderColor;
-  margin: 10px;
-  border-radius: 4px;
-}

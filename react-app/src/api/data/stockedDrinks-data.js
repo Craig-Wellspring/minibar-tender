@@ -18,16 +18,23 @@ const stockDrinks = async (drinksArray) => {
   await supabase.from("Stocked Drinks").insert(drinksArray);
 };
 
-// DELETE INVENTORY OBJECT
-const deleteStockedDrink = () => {};
+// DELETE ENTIRE BAR INVENTORY
+const deleteStockedDrinks = async (barID) => {
+  await supabase.from("Stocked Drinks").delete().eq("bar_id", barID);
+};
 
-// UPDATE INVENTORY OBJECT
-const updateStockedDrink = () => {};
+// UPDATE STOCKED INVENTORY OBJECT
+const updateStockedDrink = async (drinkID, columnName, value) => {
+  const { data } = await supabase
+    .from("Stocked Drinks")
+    .update({ [columnName]: value })
+    .eq("id", drinkID);
+};
 
 export {
   getStockedDrinks,
   getStockedDrinkObj,
   stockDrinks,
-  deleteStockedDrink,
+  deleteStockedDrinks,
   updateStockedDrink,
 };
