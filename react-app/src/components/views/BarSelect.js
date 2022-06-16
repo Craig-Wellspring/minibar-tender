@@ -59,7 +59,7 @@ export default function BarSelect() {
   };
 
   const editBarButton = () => {
-    console.warn("go to bar edit form", barModalData.id);
+    navigate(`/barsetup/${barModalData.id}`);
   };
 
   return (

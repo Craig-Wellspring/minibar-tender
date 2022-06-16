@@ -48,13 +48,13 @@ function Modal({
         <div style={{ width: "80%" }}>{modalContent}</div>
         <Break />
         <Section>
+          <CloseModalButton closeModal={closeModal} />
           <GenericButton
             id="modalSubmitBtn"
             iconName={submitIcon}
             className={submitClass}
             onClick={submitModal}
           />
-          <CloseModalButton closeModal={closeModal} />
         </Section>
       </ModalBody>
     </>

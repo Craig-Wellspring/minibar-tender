@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Title from "../Title";
 import styled from "styled-components";
 import {
   addNewDrink,
   deleteDrink,
-  getDrinksList,
+  getAllAvailableDrinks,
   updateDrink,
 } from "../../api/data/drinksList-data";
 import AvailableDrink from "../listables/AvailableDrink";
 import BackButton from "../buttons/BackButton";
 import GenericButton from "../generics/GenericButton";
-import { createNewBar } from "../../api/data/openBars-data";
-import { stockDrinks } from "../../api/data/stockedDrinks-data";
+import { createNewBar, getOpenBar } from "../../api/data/openBars-data";
+import {
+  getStockedDrinks,
+  stockDrinks,
+} from "../../api/data/stockedDrinks-data";
 import LoadingIcon from "../buttons/LoadingIcon";
 import { ColumnSection, Section } from "../generics/StyledComponents";
 import Modal from "../generics/Modal";
 import AvailableDrinkModal from "../modal-content/AvailableDrinkModal";
+import { sortedMerge } from "../generics/HelperFunctions";
 
 const Body = styled.div`
   display: flex;
@@ -43,12 +47,17 @@ const defaultDrinkData = {
 
 export default function BarSetup() {
   const navigate = useNavigate();
+  const { barID } = useParams();
 
-  const [currentDate, setDate] = useState(null);
+  const [currentDate, setCurrentDate] = useState(null);
   const [floor, setFloor] = useState(1);
   const [stockerOnly, setStockerOnly] = useState(true);
 
   const [selectedDrinks, setSelectedDrinks] = useState([]);
+  const [unselectedDrinks, setUnselectedDrinks] = useState([]);
+  const [listedDrinks, setListedDrinks] = useState([]);
+
+  // Deprecate \\
   const [availableDrinks, setAvailableDrinks] = useState([]);
 
   const [showDeleteBtns, setShowDeleteBtns] = useState(false);
@@ -58,40 +67,76 @@ export default function BarSetup() {
   const [showModal, setShowModal] = useState(false);
   const [drinkModalData, setDrinkModalData] = useState(defaultDrinkData);
 
-  const formatCurrentDate = () => {
-    const rawDate = new Date();
-    const formattedDate = `${rawDate.getFullYear()}-${String(
-      rawDate.getMonth() + 1
-    ).padStart(2, "0")}-${String(rawDate.getDate()).padStart(2, "0")}`;
+  //Initialize
+  useEffect(() => {
+    setBarData();
+    populateDrinks();
+  }, []);
 
-    setDate(formattedDate);
-  };
-
-  const populateDrinks = async () => {
-    const drinksList = await getDrinksList();
-    setAvailableDrinks(drinksList);
-    setSelectedDrinks(drinksList.filter((d) => d.default_drink));
-  };
-
-  const selectDrink = (drink) => {
-    if (
-      selectedDrinks.filter((d) => d.drink_name === drink.drink_name).length ===
-      0
-    ) {
-      setSelectedDrinks([...selectedDrinks, drink]);
+  const setBarData = async () => {
+    if (barID) {
+      const barData = await getOpenBar(barID);
+      setCurrentDate(barData.bar_date);
+      setFloor(barData.floor);
+      setStockerOnly(barData.stocker_only);
     } else {
-      unselectDrink(drink);
+      const rawDate = new Date();
+      const formattedDate = `${rawDate.getFullYear()}-${String(
+        rawDate.getMonth() + 1
+      ).padStart(2, "0")}-${String(rawDate.getDate()).padStart(2, "0")}`;
+
+      setCurrentDate(formattedDate);
     }
   };
 
-  const drinkIsSelected = (drink) => {
-    if (selectedDrinks.filter((d) => d.id === drink.id).length > 0) return true;
-    return false;
+  // Handle Drink options
+  const populateDrinks = async () => {
+    const allDrinksList = await getAllAvailableDrinks();
+    const selectedDrinksList = [];
+    const unselectedDrinksList = [];
+    if (barID) {
+      // Sort drinks into lists based on if they are stocked in the bar being edited
+      const stockedDrinks = await getStockedDrinks(barID);
+      const stockedDrinkNames = stockedDrinks?.map((d) => d.drink_name);
+      allDrinksList.forEach((d) => {
+        if (stockedDrinkNames?.includes(d.drink_name))
+          selectedDrinksList.push(d);
+        else unselectedDrinksList.push(d);
+      });
+    } else {
+      // Sort drinks into lists based on their default settings
+      allDrinksList.forEach((d) => {
+        if (d.default_drink) selectedDrinksList.push(d);
+        else unselectedDrinksList.push(d);
+      });
+    }
+    setSelectedDrinks(selectedDrinksList);
+    setUnselectedDrinks(unselectedDrinksList);
+    setListedDrinks(sortedMerge([selectedDrinksList, unselectedDrinksList]));
   };
+
+  const toggleDrink = (drink) => {
+    if (selectedDrinks.map((d) => d.id).includes(drink.id)) {
+      unselectDrink(drink);
+    } else {
+      selectDrink(drink);
+    }
+  };
+
+  const selectDrink = (drink) => {
+    setSelectedDrinks([...selectedDrinks, drink]);
+  }
 
   const unselectDrink = (drink) => {
     setSelectedDrinks(selectedDrinks.filter((d) => d.id !== drink.id));
   };
+
+  const drinkIsSelected = (drink) => {
+    if (selectedDrinks.filter((d) => d.name === drink.name).length > 0)
+      return true;
+    return false;
+  };
+
 
   const deleteDrinkBtn = (drinkID) => {
     deleteDrink(drinkID);
@@ -151,6 +196,7 @@ export default function BarSetup() {
     setShowModal(false);
   };
 
+  // Submit Button
   const submitNewBar = async () => {
     // Hide submit/back buttons
     setShowBtnTray(false);
@@ -183,28 +229,30 @@ export default function BarSetup() {
     navigate("/barselect");
   };
 
-  //Initialize
-  useEffect(() => {
-    formatCurrentDate();
-    populateDrinks();
-  }, []);
+  const submitEditBar = () => {
+    const combinedlists = sortedMerge([selectedDrinks, availableDrinks]);
+    console.warn(combinedlists);
+
+    // Return to bar select
+    // navigate("/barselect");
+  };
 
   return (
     <Body>
       <Title title="Open New Bar" />
 
-      <ColumnSection id="dateSection">
+      <ColumnSection id="date-selection">
         <Title title="Date" />
         <DateSelector
           type="date"
           defaultValue={currentDate}
           onChange={(e) => {
-            setDate(e.target.value);
+            setCurrentDate(e.target.value);
           }}
         />
       </ColumnSection>
 
-      <ColumnSection id="floorSection">
+      <ColumnSection id="floor-selection">
         <Title title="Floor" />
         <Section>
           <GenericButton
@@ -226,11 +274,12 @@ export default function BarSetup() {
 
       <ColumnSection id="drinkSelectionSection">
         <Title title="Select Drinks" />
-        {availableDrinks.map((drink) => (
+        {listedDrinks.map((drink) => (
           <AvailableDrink
             key={drink.id}
             drink={drink}
-            selectDrink={selectDrink}
+            selectDrink={toggleDrink}
+            selected={selectedDrinks.map((d) => d.id).includes(drink.id)}
             setDrinkPrice={setDrinkPrice}
             setStartCount={setStartCount}
             setPackageCount={setPackageCount}
@@ -240,35 +289,40 @@ export default function BarSetup() {
             openEditDrinkModal={openEditDrinkModal}
           />
         ))}
-        <Section>
+        <Section id="drink-management-buttons">
+          {!barID && (
+            <GenericButton
+              id="show-delete-buttons"
+              className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
+              iconName="minus"
+              onClick={() => {
+                setShowDeleteBtns(!showDeleteBtns);
+              }}
+            />
+          )}
           <GenericButton
             id="add-drink-button"
             className="btn-selected"
             iconName="plus"
+            style={barID ? { width: "240px" } : { width: "120px" }}
             onClick={() => {
               openNewDrinkModal();
             }}
           />
-          <GenericButton
-            id="show-edit-buttons"
-            className={`btn-${showEditBtns ? "unselected" : "info"}`}
-            iconName="edit"
-            onClick={() => {
-              setShowEditBtns(!showEditBtns);
-            }}
-          />
-          <GenericButton
-            id="show-delete-buttons"
-            className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
-            iconName="minus"
-            onClick={() => {
-              setShowDeleteBtns(!showDeleteBtns);
-            }}
-          />
+          {!barID && (
+            <GenericButton
+              id="show-edit-buttons"
+              className={`btn-${showEditBtns ? "unselected" : "info"}`}
+              iconName="edit"
+              onClick={() => {
+                setShowEditBtns(!showEditBtns);
+              }}
+            />
+          )}
         </Section>
       </ColumnSection>
 
-      <Section>
+      <Section id="mode-select">
         <input
           type="checkbox"
           style={{ width: "25px", height: "25px" }}
@@ -281,15 +335,15 @@ export default function BarSetup() {
         <Title title="Stocker Only Mode" />
       </Section>
 
-      <Section>
+      <Section id="nav-buttons">
         {showBtnTray ? (
           <>
-            <GenericButton
-              className="btn-selected"
-              iconName="vote-yea"
-              onClick={submitNewBar}
-            />
             <BackButton />
+            <GenericButton
+              className={barID ? "btn-info" : "btn-selected"}
+              iconName={barID ? "check-double" : "vote-yea"}
+              onClick={barID ? submitEditBar : submitNewBar}
+            />
           </>
         ) : (
           <LoadingIcon />
@@ -317,6 +371,7 @@ export default function BarSetup() {
             }
           }}
           submitIcon={drinkModalData.id ? "check-double" : "check"}
+          submitClass={drinkModalData.id ? "btn-info" : "btn-selected"}
         />
       )}
     </Body>

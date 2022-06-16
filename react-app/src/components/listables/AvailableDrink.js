@@ -55,6 +55,7 @@ const drinkTypeIcons = {
 function AvailableDrink({
   drink,
   selectDrink,
+  selected,
   setDrinkPrice,
   setStartCount,
   setPackageCount,
@@ -63,16 +64,22 @@ function AvailableDrink({
   showEditBtns,
   openEditDrinkModal,
 }) {
-  const [isSelected, setIsSelected] = useState(drink.default_drink);
-
   return (
     <DrinkObj>
       <CompactSection style={{ width: "100%" }}>
+        {showDeleteBtns && (
+          <GenericButton
+            iconName="trash-alt"
+            className="btn-danger"
+            onClick={() => {
+              deleteDrinkBtn(drink.id);
+            }}
+          />
+        )}
         <DrinkButton
-          className={`btn-${isSelected ? "selected" : "unselected"}`}
+          className={`btn-${selected ? "selected" : "unselected"}`}
           onClick={() => {
             selectDrink(drink);
-            setIsSelected(!isSelected);
           }}
         >
           {drink.drink_name}
@@ -86,16 +93,6 @@ function AvailableDrink({
             }}
           />
         )}
-        {showDeleteBtns && (
-          <GenericButton
-            style={{ marginLeft: "5px" }}
-            iconName="trash-alt"
-            className="btn-danger"
-            onClick={() => {
-              deleteDrinkBtn(drink.id);
-            }}
-          />
-        )}
       </CompactSection>
       <Section style={{ justifyContent: "space-between", margin: "0px 15px" }}>
         <CompactSection id="start-count-input">
@@ -104,8 +101,9 @@ function AvailableDrink({
             defaultValue={drink.price}
             onChange={(e) => {
               setDrinkPrice(drink, e.target.value);
-              drink.price = e.target.value;
+              // drink.price = e.target.value;
             }}
+            value={drink.price}
           />
         </CompactSection>
         <CompactSection id="start-count-input">
@@ -140,6 +138,7 @@ function AvailableDrink({
 AvailableDrink.propTypes = {
   drink: PropTypes.shape().isRequired,
   selectDrink: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
   setDrinkPrice: PropTypes.func.isRequired,
   setStartCount: PropTypes.func.isRequired,
   setPackageCount: PropTypes.func.isRequired,

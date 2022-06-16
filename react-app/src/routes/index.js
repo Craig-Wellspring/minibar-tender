@@ -11,6 +11,7 @@ export default function Routing() {
     <Routes>
       <Route exact path="/" element={<StoreSelect />} />
       <Route exact path="/barselect" element={<BarSelect />} />
+      {/* <Route exact path="/barselect/:storeID" element={<BarSelect />} /> */}
       <Route exact path="/barsetup" element={<BarSetup />} />
       <Route exact path="/barsetup/:barID" element={<BarSetup />} />
       <Route exact path="/serverops/:barID" element={<ServerOps />} />
