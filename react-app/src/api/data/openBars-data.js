@@ -9,7 +9,7 @@ const getOpenBars = async () => {
     .select("*")
     .eq("store_id", storeId);
 
-  return openBars;
+  return openBars.data;
 };
 
 // GET SINGLE OPEN BAR

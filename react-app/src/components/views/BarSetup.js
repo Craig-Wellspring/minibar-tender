@@ -16,16 +16,14 @@ import {
   getStockedDrinks,
   stockDrinks,
 } from "../../api/data/stockedDrinks-data";
-import LoadingIcon from "../buttons/LoadingIcon";
+import LoadingIcon from "../generics/LoadingIcon";
 import { ColumnSection, Section } from "../generics/StyledComponents";
 import Modal from "../generics/Modal";
 import AvailableDrinkModal from "../modal-content/AvailableDrinkModal";
-import { sortDrinkListByName, sortedMerge } from "../generics/HelperFunctions";
+import { sortDrinkListByName } from "../generics/HelperFunctions";
+import LargeLoading from "../generics/LargeLoading";
 
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+const Body = styled(ColumnSection)`
   gap: 40px;
 `;
 
@@ -49,6 +47,8 @@ export default function BarSetup() {
   const navigate = useNavigate();
   const { barID } = useParams();
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [currentDate, setCurrentDate] = useState(null);
   const [floor, setFloor] = useState(1);
   const [stockerOnly, setStockerOnly] = useState(true);
@@ -57,16 +57,20 @@ export default function BarSetup() {
 
   const [showDeleteBtns, setShowDeleteBtns] = useState(false);
   const [showEditBtns, setShowEditBtns] = useState(false);
-  const [showBtnTray, setShowBtnTray] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
   const [drinkModalData, setDrinkModalData] = useState(defaultDrinkData);
 
   //Initialize
   useEffect(() => {
-    setBarData();
-    populateDrinks();
-  }, []);
+    setIsLoading(true);
+    (async function () {
+      setBarData();
+      await populateDrinks();
+      setIsLoading(false);
+    })();
+    // eslint-disable-next-line
+  }, [barID]);
 
   const setBarData = async () => {
     if (barID) {
@@ -140,12 +144,12 @@ export default function BarSetup() {
     let otherDrinks = availableDrinks;
 
     if (drinkModalData.id) {
-      // Submit edit
+      // Submit edit drink
       otherDrinks = availableDrinks.filter((d) => d.id !== drinkObj.id);
       delete drinkObj.isSelected;
       drinkObj = await updateDrink(drinkObj);
     } else {
-      // Submit new
+      // Submit new drink
       drinkObj = await addNewDrink(drinkObj);
     }
 
@@ -159,154 +163,149 @@ export default function BarSetup() {
   };
 
   // Submit Button
-  const submitNewBar = async () => {
-    // Hide submit/back buttons
-    setShowBtnTray(false);
-
-    // Create new bar with date, floor, mode
-    const newBarInfoObj = {
+  const submitBar = async () => {
+    setIsLoading(true);
+    const barDataObj = {
       store_id: 1,
       bar_date: currentDate,
       floor: floor,
       stocker_only: stockerOnly,
     };
-    const newBarID = await createNewBar(newBarInfoObj);
 
-    // Stock new bar with each drink
-    const drinksToStock = [];
-    const selectedDrinks = availableDrinks.filter((d) => d.isSelected);
-    selectedDrinks.forEach((drink) => {
-      const newDrinkObj = {
-        drink_name: drink.drink_name,
-        drink_type: drink.drink_type,
-        price: parseInt(drink.price),
-        start_count: parseInt(drink.start_count),
-        package_count: parseInt(drink.package_count),
-        bar_id: newBarID,
-      };
-      drinksToStock.push(newDrinkObj);
-    });
-    await stockDrinks(drinksToStock);
+    if (barID) {
+      // Submit edit bar
+    } else {
+      // Submit new bar
+      const newBarID = await createNewBar(barDataObj);
+
+      // Stock new bar with each drink
+      const drinksToStock = [];
+      const selectedDrinks = availableDrinks.filter((d) => d.isSelected);
+      selectedDrinks.forEach((drink) => {
+        const newDrinkObj = {
+          drink_name: drink.drink_name,
+          drink_type: drink.drink_type,
+          price: parseInt(drink.price),
+          start_count: parseInt(drink.start_count),
+          package_count: parseInt(drink.package_count),
+          bar_id: newBarID,
+        };
+        drinksToStock.push(newDrinkObj);
+      });
+      await stockDrinks(drinksToStock);
+    }
 
     // Return to bar select
     navigate("/barselect");
   };
 
-  const submitEditBar = () => {
-    // const combinedlists = sortedMerge([selectedDrinks, availableDrinks]);
-    // console.warn(combinedlists);
-    // Return to bar select
-    // navigate("/barselect");
-  };
-
   return (
     <Body>
-      <Title title="Open New Bar" />
-
-      <ColumnSection id="date-selection">
-        <Title title="Date" />
-        <DateSelector
-          type="date"
-          defaultValue={currentDate}
-          onChange={(e) => {
-            setCurrentDate(e.target.value);
-          }}
-        />
-      </ColumnSection>
-
-      <ColumnSection id="floor-selection">
-        <Title title="Floor" />
-        <Section>
-          <GenericButton
-            className={`btn-${floor === 1 ? "selected" : "unselected"}`}
-            iconName="1"
-            onClick={() => {
-              setFloor(1);
-            }}
-          />
-          <GenericButton
-            className={`btn-${floor === 2 ? "selected" : "unselected"}`}
-            iconName="2"
-            onClick={() => {
-              setFloor(2);
-            }}
-          />
-        </Section>
-      </ColumnSection>
-
-      <ColumnSection id="drinkSelectionSection">
-        <Title title="Select Drinks" />
-        {availableDrinks.map((drink) => (
-          <AvailableDrink
-            key={drink.id}
-            drink={drink}
-            updateDrinkData={updateDrinkData}
-            showDeleteBtns={showDeleteBtns}
-            deleteDrinkBtn={deleteDrinkBtn}
-            showEditBtns={showEditBtns}
-            openDrinkModal={openDrinkModal}
-          />
-        ))}
-        <Section id="drink-management-buttons">
-          {!barID && (
-            <GenericButton
-              id="show-delete-buttons"
-              className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
-              iconName="minus"
-              onClick={() => {
-                setShowDeleteBtns(!showDeleteBtns);
+      <Title title={barID ? "Edit Bar " : "Open New Bar"} />
+      {isLoading ? (
+        <LargeLoading />
+      ) : (
+        <>
+          <ColumnSection id="date-selection">
+            <Title title="Date" />
+            <DateSelector
+              type="date"
+              defaultValue={currentDate}
+              onChange={(e) => {
+                setCurrentDate(e.target.value);
               }}
             />
-          )}
-          <GenericButton
-            id="add-drink-button"
-            className="btn-selected"
-            iconName="plus"
-            style={barID ? { width: "240px" } : { width: "120px" }}
-            onClick={() => {
-              openDrinkModal();
-            }}
-          />
-          {!barID && (
-            <GenericButton
-              id="show-edit-buttons"
-              className={`btn-${showEditBtns ? "unselected" : "info"}`}
-              iconName="edit"
-              onClick={() => {
-                setShowEditBtns(!showEditBtns);
+          </ColumnSection>
+
+          <ColumnSection id="floor-selection">
+            <Title title="Floor" />
+            <Section>
+              <GenericButton
+                className={`btn-${floor === 1 ? "selected" : "unselected"}`}
+                iconName="1"
+                onClick={() => {
+                  setFloor(1);
+                }}
+              />
+              <GenericButton
+                className={`btn-${floor === 2 ? "selected" : "unselected"}`}
+                iconName="2"
+                onClick={() => {
+                  setFloor(2);
+                }}
+              />
+            </Section>
+          </ColumnSection>
+
+          <ColumnSection id="drinkSelectionSection">
+            <Title title="Select Drinks" />
+            {availableDrinks.map((drink) => (
+              <AvailableDrink
+                key={drink.id}
+                drink={drink}
+                updateDrinkData={updateDrinkData}
+                showDeleteBtns={showDeleteBtns}
+                deleteDrinkBtn={deleteDrinkBtn}
+                showEditBtns={showEditBtns}
+                openDrinkModal={openDrinkModal}
+              />
+            ))}
+            <Section id="drink-management-buttons">
+              {!barID && (
+                <GenericButton
+                  id="show-delete-buttons"
+                  className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
+                  iconName="minus"
+                  onClick={() => {
+                    setShowDeleteBtns(!showDeleteBtns);
+                  }}
+                />
+              )}
+              <GenericButton
+                id="add-drink-button"
+                className="btn-selected"
+                iconName="plus"
+                style={barID ? { width: "240px" } : { width: "120px" }}
+                onClick={() => {
+                  openDrinkModal();
+                }}
+              />
+              {!barID && (
+                <GenericButton
+                  id="show-edit-buttons"
+                  className={`btn-${showEditBtns ? "unselected" : "info"}`}
+                  iconName="edit"
+                  onClick={() => {
+                    setShowEditBtns(!showEditBtns);
+                  }}
+                />
+              )}
+            </Section>
+          </ColumnSection>
+
+          <Section id="mode-select">
+            <input
+              type="checkbox"
+              style={{ width: "25px", height: "25px" }}
+              id="stockerOnly-check"
+              checked={stockerOnly}
+              onChange={() => {
+                setStockerOnly(!stockerOnly);
               }}
             />
-          )}
-        </Section>
-      </ColumnSection>
+            <Title title="Stocker Only Mode" />
+          </Section>
 
-      <Section id="mode-select">
-        <input
-          type="checkbox"
-          style={{ width: "25px", height: "25px" }}
-          id="stockerOnly-check"
-          checked={stockerOnly}
-          onChange={() => {
-            setStockerOnly(!stockerOnly);
-          }}
-        />
-        <Title title="Stocker Only Mode" />
-      </Section>
-
-      <Section id="nav-buttons">
-        {showBtnTray ? (
-          <>
+          <Section id="nav-buttons">
             <BackButton />
             <GenericButton
               className={barID ? "btn-info" : "btn-selected"}
               iconName={barID ? "check-double" : "vote-yea"}
-              onClick={barID ? submitEditBar : submitNewBar}
+              onClick={submitBar}
             />
-          </>
-        ) : (
-          <LoadingIcon />
-        )}
-      </Section>
+          </Section>
+        </>
+      )}
 
       {showModal && (
         <Modal

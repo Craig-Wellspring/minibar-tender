@@ -1,5 +1,5 @@
 import React from 'react'
-import GenericButton from '../generics/GenericButton'
+import GenericButton from './GenericButton'
 
 export default function LoadingIcon() {
   return (
