@@ -2,23 +2,14 @@ import { supabase } from "../auth";
 
 // GET DRINKS
 const getAllAvailableDrinks = async () => {
-  let { data: availableDrinks } = await supabase
-    .from("Available Drinks")
-    .select("*");
-
-  return availableDrinks;
+  let { data } = await supabase.from("Available Drinks").select("*");
+  return data;
 };
-
-// GET SINGLE DRINK
-const getSingleDrink = () => {};
 
 // ADD DRINK
 const addNewDrink = async (drinkObj) => {
-  const { data: newDrink } = await supabase
-    .from("Available Drinks")
-    .insert([drinkObj]);
-
-    return newDrink[0];
+  const { data } = await supabase.from("Available Drinks").insert([drinkObj]);
+  return data[0];
 };
 
 // DELETE DRINK
@@ -28,12 +19,11 @@ const deleteDrink = async (drinkID) => {
 
 // UPDATE DRINK
 const updateDrink = async (drinkObj) => {
-  const { data: updatedDrinkObj } = await supabase
-  .from('Available Drinks')
-  .update(drinkObj)
-  .eq('id', drinkObj.id)
-
-  return updatedDrinkObj[0];
+  const { data } = await supabase
+    .from("Available Drinks")
+    .update(drinkObj)
+    .eq("id", drinkObj.id);
+  return data[0];
 };
 
-export { getAllAvailableDrinks, getSingleDrink, addNewDrink, deleteDrink, updateDrink };
+export { getAllAvailableDrinks, addNewDrink, deleteDrink, updateDrink };

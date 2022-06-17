@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Break, ColumnSection, Section } from "../generics/StyledComponents";
+import { Break, ColumnSection } from "../generics/StyledComponents";
 import StockerWrapupDrink from "../listables/StockerWrapupDrink";
 import Title from "../Title";
 
@@ -30,13 +30,17 @@ export default function StockerWrapupModal({
     return drink.price * soldCount;
   };
 
-  useEffect(() => {
+  const updateDrinkSales = () => {
     let total = 0;
     drinks.forEach((d) => {
       total += calculateDrinkSales(d);
     });
     setTotalSales(total);
-  }, [drinks]);
+  };
+
+  useEffect(() => {
+    updateDrinkSales();
+  }, []);
 
   return (
     <ColumnSection id="modal-content">
@@ -53,6 +57,7 @@ export default function StockerWrapupModal({
             key={d.id}
             drink={d}
             updateDrinkEndCount={updateDrinkEndCount}
+            updateDrinkSales={updateDrinkSales}
           />
         ))}
       </WrapupForm>

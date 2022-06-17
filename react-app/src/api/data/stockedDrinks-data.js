@@ -10,9 +10,6 @@ const getStockedDrinks = async (barID) => {
   return stockedDrinks;
 };
 
-// GET SINGLE STOCKED DRINK OBJECT
-const getStockedDrinkObj = () => {};
-
 // CREATE STOCKED DRINK OBJECTS
 const stockDrinks = async (drinksArray) => {
   await supabase.from("Stocked Drinks").insert(drinksArray);
@@ -33,7 +30,6 @@ const updateStockedDrink = async (drinkID, columnName, value) => {
 
 export {
   getStockedDrinks,
-  getStockedDrinkObj,
   stockDrinks,
   deleteStockedDrinks,
   updateStockedDrink,
