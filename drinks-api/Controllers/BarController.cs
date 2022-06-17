@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using drinks_api.Repositories;
-using drinks_api.Models;
+using recordsAPI.Repositories;
+using recordsAPI.Models;
 
-namespace drinks_api.Controllers
+namespace recordsAPI.Controllers
 {
     [Route("api/barrecords")]
     [ApiController]

@@ -1,7 +1,7 @@
-﻿using drinks_api.Models;
+﻿using recordsAPI.Models;
 using System.Data.SqlClient;
 
-namespace drinks_api.Repositories
+namespace recordsAPI.Repositories
 {
     public class DrinkRecordRepository : IDrinkRecordRepository
     {

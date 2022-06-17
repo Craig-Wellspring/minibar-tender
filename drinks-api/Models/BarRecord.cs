@@ -1,4 +1,4 @@
-﻿namespace drinks_api.Models
+﻿namespace recordsAPI.Models
 {
     public class BarRecord
     {

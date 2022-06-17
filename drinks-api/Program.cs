@@ -1,4 +1,4 @@
-using drinks_api.Repositories;
+using recordsAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

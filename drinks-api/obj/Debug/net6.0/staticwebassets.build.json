@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "ByF7AWjcKYdKXK2qhGDwAgv8aRtoWcPJGvjE+GBeIwA=",
-  "Source": "drinks-api",
-  "BasePath": "_content/drinks-api",
+  "Hash": "2NIA8fuR+d+NREprnl335cFZHwiEx32Ukg6BnUbsAJc=",
+  "Source": "sales-records-api",
+  "BasePath": "_content/sales-records-api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],

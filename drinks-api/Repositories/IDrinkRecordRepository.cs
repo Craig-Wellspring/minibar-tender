@@ -1,6 +1,6 @@
-﻿using drinks_api.Models;
+﻿using recordsAPI.Models;
 
-namespace drinks_api.Repositories
+namespace recordsAPI.Repositories
 {
     public interface IDrinkRecordRepository
     {
