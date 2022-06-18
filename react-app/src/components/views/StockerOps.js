@@ -16,6 +16,10 @@ import StockerWrapupModal from "../modal-content/StockerWrapupModal";
 import LargeLoading from "../generics/LargeLoading";
 import LoadingIcon from "../generics/LoadingIcon";
 import { sortDrinkListByName } from "../generics/HelperFunctions";
+import {
+  createBarSalesRecord,
+  createDrinkSalesRecord,
+} from "../../api/records/salesRecords-data";
 
 function StockerOps() {
   const navigate = useNavigate();
@@ -91,27 +95,27 @@ function StockerOps() {
       Bar_Id: parseInt(barID),
       Bar_Date: barInfo.bar_date,
       Floor: barInfo.floor,
-      Server_Name: barInfo.server_name,
-      Stocker_Name: barInfo.stocker_name,
+      Server_Name: barInfo.server_name || "NA",
+      Stocker_Name: barInfo.stocker_name || "NA",
     };
-    // createBarSalesRecord(barRecordObj);
+    createBarSalesRecord(barRecordObj);
 
     // Create sales records for each drink
-    const salesRecords = [];
+    const drinkSalesRecords = [];
     drinksList.forEach((d) => {
       const soldCount = barInfo.stocker_only
         ? d.start_count + d.add_count - d.end_count
         : d.sold_count;
-      const salesRecordObj = {
+      const drinkRecordObj = {
         drink_name: d.drink_name,
         drink_type: d.drink_type,
         drink_price: d.price,
         number_sold: soldCount,
         bar_id: parseInt(barID),
       };
-      salesRecords.push(salesRecordObj);
+      drinkSalesRecords.push(drinkRecordObj);
     });
-    // Promise.all(salesRecords.map((r) => createDrinkSalesRecord(r)));
+    drinkSalesRecords.forEach((dsr) => createDrinkSalesRecord(dsr));
 
     // Delete the Open Bar and its Stocked Drinks
     await Promise.all([deleteStockedDrinks(barID), closeBar(barID)]);

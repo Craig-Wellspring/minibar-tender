@@ -37,7 +37,6 @@ namespace recordsAPI.Controllers
 
         // POST: barrecords/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create(BarRecord barRecord)
         {
             if (barRecord == null)

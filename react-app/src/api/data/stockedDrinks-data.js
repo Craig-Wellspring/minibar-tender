@@ -26,6 +26,7 @@ const updateStockedDrink = async (drinkID, columnName, value) => {
     .from("Stocked Drinks")
     .update({ [columnName]: value })
     .eq("id", drinkID);
+  return data[0];
 };
 
 export {

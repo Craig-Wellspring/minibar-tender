@@ -22,7 +22,7 @@ function ServerOps() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [barID]);
 
   return (
     <ColumnSection>

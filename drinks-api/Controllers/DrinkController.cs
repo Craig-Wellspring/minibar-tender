@@ -31,7 +31,6 @@ namespace recordsAPI.Controllers
 
         // POST: drinkrecords/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create(DrinkRecord drinkRecord)
         {
             if (drinkRecord == null)

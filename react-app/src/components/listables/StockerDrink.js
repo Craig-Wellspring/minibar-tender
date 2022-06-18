@@ -80,11 +80,11 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
           className="btn-danger"
           onClick={() => {
             updateCart(
-              drinkData.package_count == 1 ? -2 : -drinkData.package_count
+              drinkData.package_count === 1 ? -2 : -drinkData.package_count
             );
           }}
         >
-          -{drinkData.package_count == 1 ? 2 : drinkData.package_count}
+          -{drinkData.package_count === 1 ? 2 : drinkData.package_count}
         </CartButton>
         <CartButton
           type="button"
@@ -126,11 +126,11 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
           className="btn-selected"
           onClick={() => {
             updateCart(
-              drinkData.package_count == 1 ? 2 : drinkData.package_count
+              drinkData.package_count === 1 ? 2 : drinkData.package_count
             );
           }}
         >
-          +{drinkData.package_count == 1 ? 2 : drinkData.package_count}
+          +{drinkData.package_count === 1 ? 2 : drinkData.package_count}
         </CartButton>
       </CartControls>
     </DrinkCard>
