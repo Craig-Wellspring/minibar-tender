@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import { ColumnSection, Section } from "../generics/StyledComponents";
-import Title from "../Title";
+import { ColumnSection, Label, Section } from "../generics/StyledComponents";
 import NumberInput from "../generics/NumberInput";
 
 const ModalGrid = styled.div`
@@ -16,27 +15,29 @@ const ModalGrid = styled.div`
 
 const NameInput = styled.input`
   height: 30px;
-  font-size: 20px;
-  width: 80%;
+  width: 90%;
   text-align: center;
+  padding: 5px;
+  font-size: 18px;
 `;
 
 const TypeDropdown = styled.select`
-  height: 30px;
-  font-size: 20px;
-  padding: 4px;
-  width: 80%;
+  height: 42px;
+  width: 90%;
+  padding: 5px;
+  font-size: 18px;
 `;
 
 function AvailableDrinkModal({ drinkObj, setModalData }) {
   return (
     <ColumnSection>
       <ModalGrid>
-        <Title title="Name" style={{ gridColumn: "1 / span 2" }} />
-        <Title title="Price" />
+        <Label style={{ gridColumn: "1 / span 2" }}>Name</Label>
+        <Label>Price</Label>
 
         <NameInput
           type="text"
+          className="background main-text bordered"
           defaultValue={drinkObj.drink_name}
           style={{ gridColumn: "1 / span 2" }}
           onChange={(e) => {
@@ -50,9 +51,9 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
           }}
         />
 
-        <Title title="Start Count" />
-        <Title title="Drink Type" />
-        <Title title="Package Count" />
+        <Label>Start Count</Label>
+        <Label>Drink Type</Label>
+        <Label>Package Count</Label>
 
         <NumberInput
           defaultValue={drinkObj.start_count}
@@ -61,6 +62,7 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
           }}
         />
         <TypeDropdown
+          className="bordered main-text background"
           defaultValue={drinkObj.drink_type}
           onChange={(e) => {
             setModalData({ ...drinkObj, drink_type: e.target.value });
@@ -80,7 +82,7 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
         />
       </ModalGrid>
       <br />
-      <Section>
+      {/* <Section>
         <input
           type="checkbox"
           style={{ width: "25px", height: "25px" }}
@@ -92,8 +94,8 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
             });
           }}
         />
-        <Title title="Selected by Default" />
-      </Section>
+        <Label>Selected by Default"</Label>
+      </Section> */}
     </ColumnSection>
   );
 }

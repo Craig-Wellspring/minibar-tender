@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getOpenBars } from "../../api/data/openBars-data";
 import NewBarButton from "../buttons/NewBarButton";
-import { ColumnSection } from "../generics/StyledComponents";
+import { ColumnSection, Label, Title } from "../generics/StyledComponents";
 import OpenBar from "../listables/OpenBar";
-import Title from "../Title";
 import Modal from "../generics/Modal";
 import BarSelectModal from "../modal-content/BarSelectModal";
 import { getCurrentUser } from "../../api/auth";
@@ -64,19 +63,28 @@ export default function BarSelect() {
 
   return (
     <>
-      <Title title="Bar Select" />
+      <Title style={{ marginBottom: "15px" }}>Select Bar</Title>
 
       {isLoading ? (
         <LargeLoading />
       ) : (
         <ColumnSection style={{ width: "100%" }}>
-          {openBarsList.map((openBarInfo) => (
-            <OpenBar
-              key={openBarInfo.id}
-              barInfo={openBarInfo}
-              selectBar={selectBar}
-            />
-          ))}
+          {openBarsList.length > 0 ? (
+            openBarsList.map((openBarInfo) => (
+              <OpenBar
+                key={openBarInfo.id}
+                barInfo={openBarInfo}
+                selectBar={selectBar}
+              />
+            ))
+          ) : (
+            <Label
+              className="bordered"
+              style={{ width: "80%", padding: "8px 20px" }}
+            >
+              No Open Bars
+            </Label>
+          )}
         </ColumnSection>
       )}
       <NewBarButton />

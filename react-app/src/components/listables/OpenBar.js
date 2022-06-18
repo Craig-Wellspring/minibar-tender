@@ -2,12 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { getCurrentUser } from "../../api/auth";
 import styled from "styled-components";
+import { Section } from "../generics/StyledComponents";
 
-const OpenBarButton = styled.div`
-  width: 100%;
-  font-size: 24px;
+const OpenBarButton = styled(Section)`
+  width: 80%;
 
+  padding: 8px 20px;
   border-radius: 4px;
+  font-size: 24px;
 `;
 
 export default function OpenBar({ barInfo, selectBar }) {
@@ -47,7 +49,7 @@ export default function OpenBar({ barInfo, selectBar }) {
       onClick={() => {
         selectBar(barInfo);
       }}
-      className={`btn-${getBarColor(barInfo)}`}
+      className={`btn-${getBarColor(barInfo)} secondary-text`}
     >
       <i className={`no-click basic-icon fas ${getRoleIcon(barInfo)}`} />
       Floor {barInfo.floor}

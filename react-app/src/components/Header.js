@@ -13,7 +13,7 @@ const HeaderBar = styled.div`
   text-align: center;
   font-size: 18pt;
 
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid #FFF6F5;
 `;
 
 export default function Header({ session }) {

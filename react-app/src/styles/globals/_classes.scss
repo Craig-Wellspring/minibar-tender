@@ -15,23 +15,43 @@
   width: 2em;
 }
 
-.basic-icon {
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 24px;
+.background {
+  background-color: #07040f;
 }
 
-.btn-selected {
-  background-color: $btnSelectedColor;
+.bordered {
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+}
+
+.big-bordered {
+  background-color: $cardColor;
+  border: 2px outset $borderColor;
+  border-radius: 4px;
+}
+
+.main-text {
+  color: $mainTextColor;
+}
+
+.secondary-text {
+  color: $secondaryTextColor;
+}
+
+.green-text {
+  color: $btnSelectedColor;
+}
+
+.red-text {
+  color: $btnDangerColor;
 }
 
 .btn-unselected {
   background-color: $btnUnselectedColor;
 }
 
-.btn-danger {
-  background-color: $btnDangerColor;
+.btn-selected {
+  background-color: $btnSelectedColor;
 }
 
 .btn-info {
@@ -40,4 +60,8 @@
 
 .btn-warning {
   background-color: $btnWarningColor;
+}
+
+.btn-danger {
+  background-color: $btnDangerColor;
 }

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ColumnSection } from "../generics/StyledComponents";
+import { ColumnSection, Label, Title } from "../generics/StyledComponents";
 import StockerWrapupDrink from "../listables/StockerWrapupDrink";
-import Title from "../Title";
 
 const WrapupForm = styled.div`
   display: grid;
@@ -12,7 +11,8 @@ const WrapupForm = styled.div`
   justify-items: center;
   align-items: center;
 
-  margin: 20px 0px;
+  padding: 20px;
+  margin: 10px 0px;
 `;
 
 export default function StockerWrapupModal({
@@ -44,11 +44,15 @@ export default function StockerWrapupModal({
 
   return (
     <ColumnSection id="modal-content">
-      <div>
-        Floor: {barData.floor} | {String(barData.bar_date).substring(5)}
-      </div>
+      <ColumnSection>
+        <Label>Barback</Label>
+        <span>
+          Floor: {barData.floor} | {String(barData.bar_date).substring(5)}
+        </span>
+        {barData.server_name && <span>Bartender: {barData.server_name}</span>}
+      </ColumnSection>
 
-      <WrapupForm id="wrapup-form">
+      <WrapupForm id="wrapup-form" className="big-bordered">
         <div>{"Drink Name"}</div>
         <div>{"Total Count"}</div>
         <div>{"End Count"}</div>
@@ -63,13 +67,12 @@ export default function StockerWrapupModal({
       </WrapupForm>
 
       <ColumnSection id="totals-display">
-        <Title title="Total Sales:" />
-        <Title title={`$${totalSales}`} style={{ fontSize: "40px" }} />
-        <Title title="Tipout:" />
-        <Title
-          title={`$${Math.round(totalSales * 0.03)}`}
-          style={{ fontSize: "40px" }}
-        />
+        <Label>Total Sales</Label>
+        <Title style={{ fontSize: "40px" }}>{`$${totalSales}`}</Title>
+        <Label>Tipout:</Label>
+        <Title style={{ fontSize: "40px" }}>{`$${Math.round(
+          totalSales * 0.03
+        )}`}</Title>
       </ColumnSection>
     </ColumnSection>
   );

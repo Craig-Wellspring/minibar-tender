@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import Title from "../Title";
 import styled from "styled-components";
 import {
   addNewDrink,
@@ -21,7 +20,12 @@ import {
   getStockedDrinks,
   stockDrinks,
 } from "../../api/data/stockedDrinks-data";
-import { ColumnSection, Section } from "../generics/StyledComponents";
+import {
+  ColumnSection,
+  Label,
+  Section,
+  Title,
+} from "../generics/StyledComponents";
 import Modal from "../generics/Modal";
 import AvailableDrinkModal from "../modal-content/AvailableDrinkModal";
 import { sortDrinkListByName } from "../generics/HelperFunctions";
@@ -32,10 +36,14 @@ const Body = styled(ColumnSection)`
 `;
 
 const DateSelector = styled.input`
-  text-align: center;
-  font-size: 150%;
-  width: 10em;
   align-self: center;
+  width: 10em;
+  height: 30px;
+  color-scheme: dark;
+
+  padding: 5px;
+  font-size: 18px;
+  text-align: center;
 `;
 
 const defaultDrinkData = {
@@ -211,15 +219,17 @@ export default function BarSetup() {
 
   return (
     <Body id="setup-body">
-      <Title title={barID ? "Edit Bar " : "Open New Bar"} />
+      <Title>{barID ? "Edit Bar" : "Open New Bar"}</Title>
+
       {isLoading ? (
         <LargeLoading />
       ) : (
         <>
           <ColumnSection id="date-selection">
-            <Title title="Date" />
+            <Label>Date</Label>
             <DateSelector
               type="date"
+              className="bordered background main-text"
               defaultValue={currentDate}
               onChange={(e) => {
                 setCurrentDate(e.target.value);
@@ -228,7 +238,7 @@ export default function BarSetup() {
           </ColumnSection>
 
           <ColumnSection id="floor-selection">
-            <Title title="Floor" />
+            <Label>Floor</Label>
             <Section>
               <GenericButton
                 className={`btn-${floor === 1 ? "selected" : "unselected"}`}
@@ -248,7 +258,7 @@ export default function BarSetup() {
           </ColumnSection>
 
           <ColumnSection id="drink-selection">
-            <Title title="Select Drinks" />
+            <Label>Select Drinks</Label>
             {availableDrinks.map((drink) => (
               <AvailableDrink
                 key={drink.id}
@@ -289,7 +299,7 @@ export default function BarSetup() {
             </Section>
           </ColumnSection>
 
-          <Section id="mode-select">
+          {/* <Section id="mode-select">
             <input
               type="checkbox"
               style={{ width: "25px", height: "25px" }}
@@ -299,26 +309,28 @@ export default function BarSetup() {
                 setStockerOnly(!stockerOnly);
               }}
             />
-            <Title title="Stocker Only Mode" />
-          </Section>
-
-          <Section id="nav-buttons">
-            <BackButton />
-            {showDeleteBtns && barID && (
-              <GenericButton
-                className="btn-danger"
-                iconName="trash-alt"
-                onClick={deleteBar}
-              />
-            )}
-            <GenericButton
-              className={barID ? "btn-info" : "btn-selected"}
-              iconName={barID ? "check-double" : "vote-yea"}
-              onClick={submitBar}
-            />
-          </Section>
+            <Label>Stocker Only Mode</Label>
+          </Section> */}
         </>
       )}
+
+      <Section id="nav-buttons">
+        <BackButton />
+        {showDeleteBtns && barID && (
+          <GenericButton
+            className="btn-danger"
+            iconName="trash-alt"
+            onClick={deleteBar}
+          />
+        )}
+        {!isLoading && (
+          <GenericButton
+            className={barID ? "btn-info" : "btn-selected"}
+            iconName={barID ? "check-double" : "vote-yea"}
+            onClick={submitBar}
+          />
+        )}
+      </Section>
 
       {showModal && (
         <Modal

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { ColumnSection, Section } from "../generics/StyledComponents";
-import Title from "../Title";
+import { ColumnSection, Label, Section } from "../generics/StyledComponents";
 import styled from "styled-components";
 import { getCurrentUser } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
@@ -66,11 +65,17 @@ export default function BarSelectModal({ modalData }) {
 
   return (
     <ColumnSection>
-      <Section id="date-section">
+      <span id="date-section">
         Floor: {modalData.floor} | {String(modalData.bar_date).substring(5)}
-      </Section>
+      </span>
+      {modalData.server_name && <span>Bartender: {modalData.server_name}</span>}
+      {modalData.stocker_name && <span>Barback: {modalData.stocker_name}</span>}
 
-      <ColumnSection id="staffing-buttons" style={{ width: "100%" }}>
+      <ColumnSection
+        id="staffing-buttons"
+        className="secondary-text"
+        style={{ width: "100%" }}
+      >
         {!modalData.stocker_only && (
           <StaffingButton
             id="server-staffing-button"
@@ -109,7 +114,7 @@ export default function BarSelectModal({ modalData }) {
           )}
         </StaffingButton>
       </ColumnSection>
-      <Title title={errorText} style={{ color: "red" }} />
+      <Label className="red-text">{errorText}</Label>
     </ColumnSection>
   );
 }

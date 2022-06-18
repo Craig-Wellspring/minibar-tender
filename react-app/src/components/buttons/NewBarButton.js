@@ -8,7 +8,7 @@ export default function NewBarButton() {
   return (
     <GenericButton
       className="btn-selected"
-      style={{ width: "100%", marginTop: "15px" }}
+      style={{ width: "120px", marginTop: "15px" }}
       iconName="plus"
       onClick={() => navigate("/barsetup")}
     />

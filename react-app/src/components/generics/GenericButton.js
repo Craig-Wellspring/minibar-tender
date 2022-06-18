@@ -15,7 +15,7 @@ const Button = styled.button`
 export default function GenericButton({ iconName, className, onClick, style }) {
 
   return (
-    <Button className={className} onClick={onClick} style={style}>
+    <Button className={className + " secondary-text"} onClick={onClick} style={style}>
       <i className={`fas fa-${iconName}`} />
     </Button>
   );

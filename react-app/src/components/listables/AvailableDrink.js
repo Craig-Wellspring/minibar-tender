@@ -3,45 +3,31 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import GenericButton from "../generics/GenericButton";
 import NumberInput from "../generics/NumberInput";
-import { Section } from "../generics/StyledComponents";
+import {
+  ColumnSection,
+  CompactSection,
+  Section,
+} from "../generics/StyledComponents";
 
-const DrinkObj = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-
+const DrinkObj = styled(ColumnSection)`
   width: 100%;
 
+  gap: 5px;
+
   padding: 8px;
-  border: 1px solid white;
-  border-radius: 4px;
   margin: 0px 5px;
 `;
 
-const DrinkButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-
+const DrinkButton = styled(Section)`
   width: 100%;
   height: 50px;
   border-radius: 4px;
-  margin: 0px 10px;
-  padding: 0px 15px;
 
-  text-align: center;
-  font-size: 14pt;
-  color: black;
+  font-size: 18px;
 `;
 
-const CompactSection = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 25px;
-  font-weight: bold;
+const BigCompactSection = styled(CompactSection)`
+  font-size: 22px;
 `;
 
 const drinkTypeIcons = {
@@ -61,7 +47,7 @@ function AvailableDrink({
   openDrinkModal,
 }) {
   return (
-    <DrinkObj>
+    <DrinkObj className="big-bordered">
       <CompactSection style={{ width: "100%" }}>
         {showDeleteBtns && (
           <GenericButton
@@ -73,7 +59,7 @@ function AvailableDrink({
           />
         )}
         <DrinkButton
-          className={`btn-${drink.isSelected ? "selected" : "unselected"}`}
+          className={`btn-${drink.isSelected ? "selected" : "unselected"} secondary-text big-bordered`}
           onClick={() => {
             updateDrinkData(drink, "isSelected", !drink.isSelected);
           }}
@@ -91,7 +77,7 @@ function AvailableDrink({
         )}
       </CompactSection>
       <Section style={{ justifyContent: "space-between", margin: "0px 15px" }}>
-        <CompactSection id="start-count-input">
+        <BigCompactSection id="start-count-input">
           $
           <NumberInput
             defaultValue={drink.price}
@@ -99,8 +85,8 @@ function AvailableDrink({
               updateDrinkData(drink, "price", e.target.value);
             }}
           />
-        </CompactSection>
-        <CompactSection id="start-count-input">
+        </BigCompactSection>
+        <BigCompactSection id="start-count-input">
           #
           <NumberInput
             defaultValue={drink.start_count}
@@ -108,8 +94,8 @@ function AvailableDrink({
               updateDrinkData(drink, "start_count", e.target.value);
             }}
           />
-        </CompactSection>
-        <CompactSection id="package-count-input">
+        </BigCompactSection>
+        <BigCompactSection id="package-count-input">
           <i
             className={`fas fa-${drinkTypeIcons[drink.drink_type]}`}
             style={{ marginRight: "5px" }}
@@ -121,7 +107,7 @@ function AvailableDrink({
               updateDrinkData(drink, "package_count", e.target.value);
             }}
           />
-        </CompactSection>
+        </BigCompactSection>
       </Section>
     </DrinkObj>
   );
