@@ -10,24 +10,28 @@ const getStockedDrinks = async (barID) => {
   return stockedDrinks;
 };
 
-// GET SINGLE STOCKED DRINK OBJECT
-const getStockedDrinkObj = () => {};
-
 // CREATE STOCKED DRINK OBJECTS
 const stockDrinks = async (drinksArray) => {
   await supabase.from("Stocked Drinks").insert(drinksArray);
 };
 
-// DELETE INVENTORY OBJECT
-const deleteStockedDrink = () => {};
+// DELETE ENTIRE BAR INVENTORY
+const deleteStockedDrinks = async (barID) => {
+  await supabase.from("Stocked Drinks").delete().eq("bar_id", barID);
+};
 
-// UPDATE INVENTORY OBJECT
-const updateStockedDrink = () => {};
+// UPDATE STOCKED INVENTORY OBJECT
+const updateStockedDrink = async (drinkID, columnName, value) => {
+  const { data } = await supabase
+    .from("Stocked Drinks")
+    .update({ [columnName]: value })
+    .eq("id", drinkID);
+  return data[0];
+};
 
 export {
   getStockedDrinks,
-  getStockedDrinkObj,
   stockDrinks,
-  deleteStockedDrink,
+  deleteStockedDrinks,
   updateStockedDrink,
 };

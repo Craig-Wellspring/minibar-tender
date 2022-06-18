@@ -19,7 +19,7 @@ const Blur = styled.div`
 const ModalBody = styled(ColumnSection)`
   background-color: black;
   position: absolute;
-  top: calc(20%);
+  top: 40px;
   left: 10%;
   width: 80%;
 
@@ -64,13 +64,14 @@ function Modal({
 Modal.propTypes = {
   title: PropTypes.string.isRequired,
   modalContent: PropTypes.object.isRequired,
-  closeModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func,
   submitModal: PropTypes.func,
   submitIcon: PropTypes.string,
   submitClass: PropTypes.string,
 };
 
 Modal.defaultProps = {
+  closeModal: () => {},
   submitModal: () => {},
   submitIcon: "check",
   submitClass: "btn-selected",

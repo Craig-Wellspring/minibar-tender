@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Break, ColumnSection, Section } from "../generics/StyledComponents";
+import { ColumnSection, Section } from "../generics/StyledComponents";
 import Title from "../Title";
 import styled from "styled-components";
 import { getCurrentUser } from "../../api/auth";

@@ -2,6 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { ColumnSection, Section } from "../generics/StyledComponents";
+import { updateStockedDrink } from "../../api/data/stockedDrinks-data";
 
 const DrinkCard = styled(ColumnSection)`
   padding: 8px 15px;
@@ -49,9 +50,24 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
     setCartCount(0);
   };
 
+  const submitCart = async () => {
+    if (cartCount !== 0) {
+      await updateStockedDrink(
+        drinkData.id,
+        "add_count",
+        cartCount + drinkData.add_count
+      );
+      drinkData.add_count += cartCount;
+      clearCart();
+    }
+  };
+
   useImperativeHandle(ref, () => ({
     clearCart() {
       clearCart();
+    },
+    submitCart() {
+      submitCart();
     },
   }));
 
@@ -63,10 +79,12 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
           type="button"
           className="btn-danger"
           onClick={() => {
-            updateCart(-drinkData.package_count);
+            updateCart(
+              drinkData.package_count === 1 ? -2 : -drinkData.package_count
+            );
           }}
         >
-          {-drinkData.package_count}
+          -{drinkData.package_count === 1 ? 2 : drinkData.package_count}
         </CartButton>
         <CartButton
           type="button"
@@ -107,10 +125,12 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
           type="button"
           className="btn-selected"
           onClick={() => {
-            updateCart(drinkData.package_count);
+            updateCart(
+              drinkData.package_count === 1 ? 2 : drinkData.package_count
+            );
           }}
         >
-          +{drinkData.package_count}
+          +{drinkData.package_count === 1 ? 2 : drinkData.package_count}
         </CartButton>
       </CartControls>
     </DrinkCard>

@@ -11,12 +11,16 @@ import {
 import AvailableDrink from "../listables/AvailableDrink";
 import BackButton from "../buttons/BackButton";
 import GenericButton from "../generics/GenericButton";
-import { createNewBar, getOpenBar } from "../../api/data/openBars-data";
 import {
+  closeBar,
+  createNewBar,
+  getOpenBar,
+} from "../../api/data/openBars-data";
+import {
+  deleteStockedDrinks,
   getStockedDrinks,
   stockDrinks,
 } from "../../api/data/stockedDrinks-data";
-import LoadingIcon from "../generics/LoadingIcon";
 import { ColumnSection, Section } from "../generics/StyledComponents";
 import Modal from "../generics/Modal";
 import AvailableDrinkModal from "../modal-content/AvailableDrinkModal";
@@ -133,7 +137,7 @@ export default function BarSetup() {
     );
   };
 
-  // Handle Modal
+  // Modal Control
   const openDrinkModal = (drinkData) => {
     setShowModal(true);
     setDrinkModalData(drinkData || defaultDrinkData);
@@ -162,7 +166,7 @@ export default function BarSetup() {
     setShowModal(false);
   };
 
-  // Submit Button
+  // Bar Control
   const submitBar = async () => {
     setIsLoading(true);
     const barDataObj = {
@@ -199,8 +203,14 @@ export default function BarSetup() {
     navigate("/barselect");
   };
 
+  const deleteBar = async () => {
+    setIsLoading(true);
+    await Promise.all([closeBar(barID), deleteStockedDrinks(barID)]);
+    navigate("/barselect");
+  };
+
   return (
-    <Body>
+    <Body id="setup-body">
       <Title title={barID ? "Edit Bar " : "Open New Bar"} />
       {isLoading ? (
         <LargeLoading />
@@ -237,7 +247,7 @@ export default function BarSetup() {
             </Section>
           </ColumnSection>
 
-          <ColumnSection id="drinkSelectionSection">
+          <ColumnSection id="drink-selection">
             <Title title="Select Drinks" />
             {availableDrinks.map((drink) => (
               <AvailableDrink
@@ -251,16 +261,14 @@ export default function BarSetup() {
               />
             ))}
             <Section id="drink-management-buttons">
-              {!barID && (
-                <GenericButton
-                  id="show-delete-buttons"
-                  className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
-                  iconName="minus"
-                  onClick={() => {
-                    setShowDeleteBtns(!showDeleteBtns);
-                  }}
-                />
-              )}
+              <GenericButton
+                id="show-delete-buttons"
+                className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
+                iconName="minus"
+                onClick={() => {
+                  setShowDeleteBtns(!showDeleteBtns);
+                }}
+              />
               <GenericButton
                 id="add-drink-button"
                 className="btn-selected"
@@ -270,16 +278,14 @@ export default function BarSetup() {
                   openDrinkModal();
                 }}
               />
-              {!barID && (
-                <GenericButton
-                  id="show-edit-buttons"
-                  className={`btn-${showEditBtns ? "unselected" : "info"}`}
-                  iconName="edit"
-                  onClick={() => {
-                    setShowEditBtns(!showEditBtns);
-                  }}
-                />
-              )}
+              <GenericButton
+                id="show-edit-buttons"
+                className={`btn-${showEditBtns ? "unselected" : "info"}`}
+                iconName="edit"
+                onClick={() => {
+                  setShowEditBtns(!showEditBtns);
+                }}
+              />
             </Section>
           </ColumnSection>
 
@@ -298,6 +304,13 @@ export default function BarSetup() {
 
           <Section id="nav-buttons">
             <BackButton />
+            {showDeleteBtns && barID && (
+              <GenericButton
+                className="btn-danger"
+                iconName="trash-alt"
+                onClick={deleteBar}
+              />
+            )}
             <GenericButton
               className={barID ? "btn-info" : "btn-selected"}
               iconName={barID ? "check-double" : "vote-yea"}
