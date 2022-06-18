@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Title from "../Title";
 import { useParams } from "react-router-dom";
 import { getOpenBar } from "../../api/data/openBars-data";
-import { Break, ColumnSection, Section } from "../generics/StyledComponents";
+import { Break, ColumnSection, Section, Title } from "../generics/StyledComponents";
 import GenericButton from "../generics/GenericButton";
 import BackButton from "../buttons/BackButton";
 import BarSignoutButton from "../buttons/BarSignoutButton";
@@ -26,7 +25,7 @@ function ServerOps() {
 
   return (
     <ColumnSection>
-      <Title title={`Bartender`} />
+      <Title>Bartender</Title>
       <div>
         Floor: {barInfo.floor} | {String(barInfo.bar_date).substring(5)}
       </div>

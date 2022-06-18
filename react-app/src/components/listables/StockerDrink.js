@@ -6,8 +6,6 @@ import { updateStockedDrink } from "../../api/data/stockedDrinks-data";
 
 const DrinkCard = styled(ColumnSection)`
   padding: 8px 15px;
-  border: 1px solid white;
-  border-radius: 4px;
 `;
 
 const DrinkName = styled(Section)`
@@ -22,21 +20,22 @@ const CartControls = styled(Section)`
 `;
 
 const Cart = styled(Section)`
-  height: 1.8em;
   width: 5em;
-  border-radius: 4px;
-  border: 1px solid white;
-  font-size: 24px;
+  height: 44px;
+  font-size: 22px;
 `;
 
 const CartButton = styled.button`
-  height: 2em;
-  width: 2em;
-  border: 0;
+  height: 2.2em;
+  width: 2.2em;
   border-radius: 50%;
   align-self: center;
   text-align: center;
   font-size: 20px;
+`;
+
+const CartCount = styled.div`
+  white-space: nowrap;
 `;
 
 const StockerDrink = forwardRef(({ drinkData }, ref) => {
@@ -72,7 +71,7 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
   }));
 
   return (
-    <DrinkCard>
+    <DrinkCard className="big-bordered">
       <DrinkName>{drinkData.drink_name}</DrinkName>
       <CartControls>
         <CartButton
@@ -95,18 +94,18 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
         >
           -1
         </CartButton>
-        <Cart>
+        <Cart className="bordered background">
           {drinkData.start_count + drinkData.add_count - drinkData.sold_count}{" "}
           {cartCount !== 0 && (
             <Section style={{ gap: "2px" }}>
               (
               {
-                <div
-                  style={cartCount >= 0 ? { color: "green" } : { color: "red" }}
+                <CartCount
+                  className={cartCount >= 0 ? "green-text" : "red-text"}
                 >
                   {cartCount > 0 ? "+" : ""}
                   {cartCount}
-                </div>
+                </CartCount>
               }
               )
             </Section>

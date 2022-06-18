@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Title from "../Title";
 import { closeBar, getOpenBar } from "../../api/data/openBars-data";
-import { Break, ColumnSection, Section } from "../generics/StyledComponents";
+import { ColumnSection, Section, Title } from "../generics/StyledComponents";
 import BackButton from "../buttons/BackButton";
 import GenericButton from "../generics/GenericButton";
 import BarSignoutButton from "../buttons/BarSignoutButton";
@@ -25,9 +24,9 @@ function StockerOps() {
   const navigate = useNavigate();
   const { barID } = useParams();
 
-  const [isLoading, setIsLoading] = useState(2);
-  const [cartLoading, setCartLoading] = useState(false);
+  const [barDataLoading, setBarDataLoading] = useState(2);
   const [barSubmitLoading, setBarSubmitLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
 
   const [barInfo, setBarInfo] = useState({});
 
@@ -43,7 +42,7 @@ function StockerOps() {
       const barData = await getOpenBar(barID);
       if (isMounted) {
         setBarInfo(barData);
-        setIsLoading((prevState) => prevState - 1);
+        setBarDataLoading((prevState) => prevState - 1);
       }
     })();
     return () => {
@@ -61,7 +60,7 @@ function StockerOps() {
       }));
       if (isMounted) {
         setDrinksList(sortDrinkListByName(drinksWithEndCountKey));
-        setIsLoading((prevState) => prevState - 1);
+        setBarDataLoading((prevState) => prevState - 1);
       }
     })();
     return () => {
@@ -87,7 +86,7 @@ function StockerOps() {
 
   const submitWrapupModal = async () => {
     setBarSubmitLoading(true);
-    setIsLoading(true);
+    setBarDataLoading(true);
 
     // Create bar record
     const barRecordObj = {
@@ -132,59 +131,65 @@ function StockerOps() {
 
   return (
     <>
-      <Title title={`Barback`} />
-      {isLoading ? (
+      <Title>Barback</Title>
+      {barDataLoading ? (
         <LargeLoading />
       ) : (
         <>
           <div>
             Floor: {barInfo.floor} | {String(barInfo.bar_date).substring(5)}
           </div>
-          <ColumnSection id="drinks-section">
-            {drinksList.length > 0 ? (
-              drinksList.map((drink, i) => (
-                <StockerDrink
-                  key={drink.id}
-                  drinkData={drink}
-                  ref={(el) => {
-                    drinkRef.current[i] = el;
-                  }}
-                />
-              ))
-            ) : (
-              <div>No Drinks</div>
-            )}
-          </ColumnSection>
+          <div>
+            {barInfo.server_name && <span>Bartender: {barInfo.server_name}</span>}
+          </div>
+          <ColumnSection style={{ margin: "30px 0px" }}>
+            <ColumnSection id="drinks-section">
+              {drinksList.length > 0 ? (
+                drinksList.map((drink, i) => (
+                  <StockerDrink
+                    key={drink.id}
+                    drinkData={drink}
+                    ref={(el) => {
+                      drinkRef.current[i] = el;
+                    }}
+                  />
+                ))
+              ) : (
+                <div>No Drinks</div>
+              )}
+            </ColumnSection>
 
-          <Section id="cart-confirm-buttons">
-            <GenericButton
-              className="btn-warning"
-              iconName="eraser"
-              onClick={clearCart}
-            />
-            {cartLoading ? (
-              <LoadingIcon />
-            ) : (
+            <Section id="cart-confirm-buttons">
               <GenericButton
-                className="btn-selected"
-                iconName="dolly"
-                onClick={submitCart}
+                className="btn-warning"
+                iconName="eraser"
+                onClick={clearCart}
               />
-            )}
-          </Section>
+              {cartLoading ? (
+                <LoadingIcon />
+              ) : (
+                <GenericButton
+                  className="btn-selected"
+                  iconName="dolly"
+                  onClick={submitCart}
+                />
+              )}
+            </Section>
+          </ColumnSection>
         </>
       )}
 
-      <Break />
       <Section id="button-tray">
         <BackButton />
         <BarSignoutButton barID={barID} role="stocker" />
-        <GenericButton
-          id="count-button"
-          iconName="clipboard-list"
-          className="btn-selected"
-          onClick={openWrapupModal}
-        />
+        {!barDataLoading && (
+          <GenericButton
+            id="count-button"
+            iconName="clipboard-list"
+            className="btn-selected"
+            onClick={openWrapupModal}
+          />
+        )}
       </Section>
 
       {showWrapupModal && (
@@ -201,7 +206,7 @@ function StockerOps() {
             if (!barSubmitLoading) {
               setShowWrapupModal(false);
             } else {
-              // navigate("/barselect");
+              navigate("/barselect");
             }
           }}
           submitModal={() => {

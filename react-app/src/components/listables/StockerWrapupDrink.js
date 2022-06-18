@@ -9,7 +9,8 @@ export default function StockerWrapupDrink({
   return (
     <>
       <div id="drink-name">
-        {drink.drink_name} ( ${drink.price} )
+        {drink.drink_name}{" "}
+        <span style={{ whiteSpace: "nowrap" }}>( ${drink.price} )</span>
       </div>
       <div id="total-count">{drink.start_count + drink.add_count}</div>
       <NumberInput

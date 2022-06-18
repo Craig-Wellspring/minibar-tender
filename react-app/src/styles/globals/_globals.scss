@@ -1,8 +1,6 @@
 body {
-  background-color: $bgColor !important;
   margin: 0;
-}
-
-#root {
+  background-color: $bgColor !important;
   color: $mainTextColor;
+  font-family: 'Helvetica', Helvetica, sans-serif;
 }
