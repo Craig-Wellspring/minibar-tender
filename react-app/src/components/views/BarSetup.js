@@ -229,7 +229,6 @@ export default function BarSetup() {
             <Label>Date</Label>
             <DateSelector
               type="date"
-              className="bordered background main-text"
               defaultValue={currentDate}
               onChange={(e) => {
                 setCurrentDate(e.target.value);
@@ -241,14 +240,18 @@ export default function BarSetup() {
             <Label>Floor</Label>
             <Section>
               <GenericButton
-                className={`btn-${floor === 1 ? "selected" : "unselected"}`}
+                className={`btn btn-${
+                  floor === 1 ? "selected down" : "unselected"
+                }`}
                 iconName="1"
                 onClick={() => {
                   setFloor(1);
                 }}
               />
               <GenericButton
-                className={`btn-${floor === 2 ? "selected" : "unselected"}`}
+                className={`btn btn-${
+                  floor === 2 ? "selected down" : "unselected"
+                }`}
                 iconName="2"
                 onClick={() => {
                   setFloor(2);
@@ -273,7 +276,9 @@ export default function BarSetup() {
             <Section id="drink-management-buttons">
               <GenericButton
                 id="show-delete-buttons"
-                className={`btn-${showDeleteBtns ? "unselected" : "danger"}`}
+                className={`btn-${
+                  showDeleteBtns ? "unselected down" : "danger"
+                }`}
                 iconName="minus"
                 onClick={() => {
                   setShowDeleteBtns(!showDeleteBtns);
@@ -283,14 +288,14 @@ export default function BarSetup() {
                 id="add-drink-button"
                 className="btn-selected"
                 iconName="plus"
-                style={barID ? { width: "240px" } : { width: "120px" }}
+                style={{ width: "120px" }}
                 onClick={() => {
                   openDrinkModal();
                 }}
               />
               <GenericButton
                 id="show-edit-buttons"
-                className={`btn-${showEditBtns ? "unselected" : "info"}`}
+                className={`btn-${showEditBtns ? "unselected down" : "info"}`}
                 iconName="edit"
                 onClick={() => {
                   setShowEditBtns(!showEditBtns);

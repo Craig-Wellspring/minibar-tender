@@ -8,7 +8,6 @@ const OpenBarButton = styled(Section)`
   width: 80%;
 
   padding: 8px 20px;
-  border-radius: 4px;
   font-size: 24px;
 `;
 
@@ -49,7 +48,7 @@ export default function OpenBar({ barInfo, selectBar }) {
       onClick={() => {
         selectBar(barInfo);
       }}
-      className={`btn-${getBarColor(barInfo)} secondary-text`}
+      className={`btn-${getBarColor(barInfo)} btn`}
     >
       <i className={`no-click basic-icon fas ${getRoleIcon(barInfo)}`} />
       Floor {barInfo.floor}

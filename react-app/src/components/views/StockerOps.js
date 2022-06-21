@@ -82,6 +82,7 @@ function StockerOps() {
   // Modal Control
   const openWrapupModal = () => {
     setShowWrapupModal(true);
+    window.scrollTo(0, 0);
   };
 
   const submitWrapupModal = async () => {
@@ -185,7 +186,7 @@ function StockerOps() {
         {!barDataLoading && (
           <GenericButton
             id="count-button"
-            iconName="clipboard-list"
+            iconName="clipboard-check"
             className="btn-selected"
             onClick={openWrapupModal}
           />

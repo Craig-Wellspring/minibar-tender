@@ -12,16 +12,17 @@ const HeaderBar = styled.div`
   padding: 10px;
   text-align: center;
   font-size: 18pt;
-
-  border-bottom: 1px solid #FFF6F5;
 `;
 
 export default function Header({ session }) {
   return (
-    <HeaderBar>
-      MinibarTender
-      {session ? <SignOutButton /> : <SignInButton />}
-    </HeaderBar>
+    <>
+      <HeaderBar id="header">
+        MinibarTender
+        {session ? <SignOutButton /> : <SignInButton />}
+      </HeaderBar>
+      <hr />
+    </>
   );
 }
 

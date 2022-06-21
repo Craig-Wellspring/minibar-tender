@@ -10,7 +10,6 @@ const StaffingButton = styled(Section)`
   justify-content: space-between;
 
   padding: 8px 20px;
-  border-radius: 4px;
   font-size: 24px;
 `;
 
@@ -79,7 +78,7 @@ export default function BarSelectModal({ modalData }) {
         {!modalData.stocker_only && (
           <StaffingButton
             id="server-staffing-button"
-            className={`btn-${modalData.server_id ? "selected" : "danger"}`}
+            className={`btn btn-${modalData.server_id ? "selected" : "danger"}`}
             onClick={() => {
               selectServer();
             }}
@@ -98,7 +97,7 @@ export default function BarSelectModal({ modalData }) {
 
         <StaffingButton
           id="stocker-staffing-button"
-          className={`btn-${modalData.stocker_id ? "selected" : "danger"}`}
+          className={`btn btn-${modalData.stocker_id ? "selected" : "danger"}`}
           onClick={() => {
             selectStocker();
           }}

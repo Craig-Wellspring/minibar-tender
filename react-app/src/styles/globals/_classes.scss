@@ -7,43 +7,48 @@
   pointer-events: none;
 }
 
-.number-input-field {
-  border: 1px solid black;
-  border-radius: 3px;
-  padding: 3px;
-  text-align: center;
-  width: 2em;
+#modal {
+  background-color: $bgColor;
 }
 
-.background {
-  background-color: #07040f;
-}
-
-.bordered {
-  border: 1px solid $borderColor;
-  border-radius: 4px;
-}
-
-.big-bordered {
+.card {
   background-color: $cardColor;
+  border: 3px outset $borderColor;
+  border-radius: 12px;
+}
+
+hr {
+  width: 100%;
   border: 2px outset $borderColor;
-  border-radius: 4px;
+  margin: 0;
 }
 
-.main-text {
+// Buttons and Inputs
+
+input,
+select,
+.field {
+  background-color: $bgColor;
   color: $mainTextColor;
+  border: 2px outset $borderColor;
+  border-radius: 8px;
 }
 
-.secondary-text {
+input:focus,
+select:focus,
+.btn:active,
+.btn.down,
+button:active {
+  outline: 0;
+  border-style: inset;
+  transform: translate(2px, 2px);
+  box-shadow: inset 1px 1px 2px $bgColor;
+}
+
+.btn {
+  border: 2px outset $borderColor;
   color: $secondaryTextColor;
-}
-
-.green-text {
-  color: $btnSelectedColor;
-}
-
-.red-text {
-  color: $btnDangerColor;
+  border-radius: 8px;
 }
 
 .btn-unselected {
@@ -64,4 +69,22 @@
 
 .btn-danger {
   background-color: $btnDangerColor;
+}
+
+// Font Colors
+
+.main-text {
+  color: $mainTextColor;
+}
+
+.secondary-text {
+  color: $secondaryTextColor;
+}
+
+.green-text {
+  color: $btnSelectedColor;
+}
+
+.red-text {
+  color: $btnDangerColor;
 }

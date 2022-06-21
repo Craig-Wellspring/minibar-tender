@@ -21,7 +21,7 @@ const DrinkObj = styled(ColumnSection)`
 const DrinkButton = styled(Section)`
   width: 100%;
   height: 50px;
-  border-radius: 4px;
+  border-radius: 8px;
 
   font-size: 18px;
 `;
@@ -47,19 +47,22 @@ function AvailableDrink({
   openDrinkModal,
 }) {
   return (
-    <DrinkObj className="big-bordered">
-      <CompactSection style={{ width: "100%" }}>
+    <DrinkObj className="card">
+      <Section style={{ width: "100%" }}>
         {showDeleteBtns && (
           <GenericButton
             iconName="trash-alt"
             className="btn-danger"
+            style={{ fontSize: "18px" }}
             onClick={() => {
               deleteDrinkBtn(drink.id);
             }}
           />
         )}
         <DrinkButton
-          className={`btn-${drink.isSelected ? "selected" : "unselected"} secondary-text big-bordered`}
+          className={`btn btn-${
+            drink.isSelected ? "selected down" : "unselected"
+          }`}
           onClick={() => {
             updateDrinkData(drink, "isSelected", !drink.isSelected);
           }}
@@ -70,13 +73,17 @@ function AvailableDrink({
           <GenericButton
             iconName="pen"
             className="btn-info"
+            style={{ fontSize: "18px" }}
             onClick={() => {
               openDrinkModal(drink);
             }}
           />
         )}
-      </CompactSection>
-      <Section style={{ justifyContent: "space-between", margin: "0px 15px" }}>
+      </Section>
+      <Section
+        style={{ justifyContent: "space-between", margin: "0px 15px" }}
+        className="main-text"
+      >
         <BigCompactSection id="start-count-input">
           $
           <NumberInput
