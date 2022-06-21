@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import CloseModalButton from "../buttons/CloseModalButton";
 import GenericButton from "./GenericButton";
-import { Section, ColumnSection, Break, Title } from "./StyledComponents";
+import { Section, ColumnSection, Title } from "./StyledComponents";
 import styled from "styled-components";
 
 const Blur = styled.div`
@@ -23,7 +23,7 @@ const ModalBody = styled(ColumnSection)`
   justify-content: space-between;
 
   padding: 20px 0px;
-  border-radius: 4px;
+  border-radius: 12px;
 `;
 
 function Modal({
@@ -37,11 +37,11 @@ function Modal({
   return (
     <>
       <Blur onClick={closeModal} />
-      <ModalBody className="background">
+      <ModalBody id="modal">
         <Title>{title}</Title>
-        <Break />
+        <hr />
         <div style={{ width: "80%" }}>{modalContent}</div>
-        <Break />
+        <hr />
         <Section>
           <CloseModalButton closeModal={closeModal} />
           <GenericButton

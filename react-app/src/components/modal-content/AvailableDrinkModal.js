@@ -37,7 +37,6 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
 
         <NameInput
           type="text"
-          className="background main-text bordered"
           defaultValue={drinkObj.drink_name}
           style={{ gridColumn: "1 / span 2" }}
           onChange={(e) => {
@@ -62,7 +61,6 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
           }}
         />
         <TypeDropdown
-          className="bordered main-text background"
           defaultValue={drinkObj.drink_type}
           onChange={(e) => {
             setModalData({ ...drinkObj, drink_type: e.target.value });
@@ -82,7 +80,7 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
         />
       </ModalGrid>
       <br />
-      {/* <Section>
+      <Section>
         <input
           type="checkbox"
           style={{ width: "25px", height: "25px" }}
@@ -94,8 +92,8 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
             });
           }}
         />
-        <Label>Selected by Default"</Label>
-      </Section> */}
+        <Label>Selected by Default</Label>
+      </Section>
     </ColumnSection>
   );
 }

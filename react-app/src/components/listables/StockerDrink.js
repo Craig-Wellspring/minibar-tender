@@ -26,12 +26,15 @@ const Cart = styled(Section)`
 `;
 
 const CartButton = styled.button`
-  height: 2.2em;
-  width: 2.2em;
+  height: 2.3em;
+  width: 2.3em;
   border-radius: 50%;
+  display: flex;
   align-self: center;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  font-size: 20px;
+  font-size: 18px;
 `;
 
 const CartCount = styled.div`
@@ -71,7 +74,7 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
   }));
 
   return (
-    <DrinkCard className="big-bordered">
+    <DrinkCard className="card">
       <DrinkName>{drinkData.drink_name}</DrinkName>
       <CartControls>
         <CartButton
@@ -94,7 +97,7 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
         >
           -1
         </CartButton>
-        <Cart className="bordered background">
+        <Cart className="field">
           {drinkData.start_count + drinkData.add_count - drinkData.sold_count}{" "}
           {cartCount !== 0 && (
             <Section style={{ gap: "2px" }}>

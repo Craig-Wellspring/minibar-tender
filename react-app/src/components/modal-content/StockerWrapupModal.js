@@ -52,7 +52,7 @@ export default function StockerWrapupModal({
         {barData.server_name && <span>Bartender: {barData.server_name}</span>}
       </ColumnSection>
 
-      <WrapupForm id="wrapup-form" className="big-bordered">
+      <WrapupForm id="wrapup-form" className="card">
         <div>{"Drink Name"}</div>
         <div>{"Total Count"}</div>
         <div>{"End Count"}</div>

@@ -79,7 +79,7 @@ export default function BarSelect() {
             ))
           ) : (
             <Label
-              className="bordered"
+              className="card"
               style={{ width: "80%", padding: "8px 20px" }}
             >
               No Open Bars

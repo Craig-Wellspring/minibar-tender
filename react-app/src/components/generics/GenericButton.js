@@ -5,17 +5,15 @@ const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 45px;
-  border-radius: 4px;
-  border: 0;
+  width: 55px;
+  height: 50px;
   font-size: 22px;
 `;
 
 export default function GenericButton({ iconName, className, onClick, style }) {
 
   return (
-    <Button className={className + " secondary-text"} onClick={onClick} style={style}>
+    <Button className={className + " btn"} onClick={onClick} style={style}>
       <i className={`fas fa-${iconName}`} />
     </Button>
   );

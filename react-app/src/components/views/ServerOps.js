@@ -32,7 +32,6 @@ function ServerOps() {
 
       <ColumnSection></ColumnSection>
 
-      <Break />
       <Section id="button-tray">
         <GenericButton
           id="count-button"

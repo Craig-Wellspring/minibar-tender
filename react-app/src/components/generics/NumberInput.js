@@ -15,7 +15,7 @@ export default function NumberInput({ defaultValue, className, onChange, style }
       type="number"
       defaultValue={defaultValue}
       onChange={onChange}
-      className={className + " background main-text big-bordered"}
+      className={className}
       style={style}
     />
   );
