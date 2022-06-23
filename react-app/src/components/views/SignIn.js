@@ -1,5 +1,12 @@
 import React from "react";
 
 export default function SignIn() {
-  return <div id="image"></div>;
+  return (
+    <img
+      src="logo192.png"
+      alt="MinibarTender Logo"
+      width="300"
+      height="300"
+    />
+  );
 }

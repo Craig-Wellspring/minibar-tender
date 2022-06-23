@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import { ColumnSection, Label, Section } from "../generics/StyledComponents";
@@ -26,6 +26,11 @@ const TypeDropdown = styled.select`
   width: 90%;
   padding: 5px;
   font-size: 18px;
+`;
+
+const Checkbox = styled.div`
+  height: 25px;
+  width: 25px;
 `;
 
 function AvailableDrinkModal({ drinkObj, setModalData }) {
@@ -81,11 +86,9 @@ function AvailableDrinkModal({ drinkObj, setModalData }) {
       </ModalGrid>
       <br />
       <Section>
-        <input
-          type="checkbox"
-          style={{ width: "25px", height: "25px" }}
-          checked={drinkObj.default_drink}
-          onChange={() => {
+        <Checkbox
+          className={`btn ${drinkObj.default_drink && "btn-selected down"}`}
+          onClick={() => {
             setModalData({
               ...drinkObj,
               default_drink: !drinkObj.default_drink,

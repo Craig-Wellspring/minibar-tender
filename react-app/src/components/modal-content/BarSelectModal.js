@@ -84,7 +84,7 @@ export default function BarSelectModal({ modalData }) {
             }}
           >
             <i className="fas fa-cash-register" />
-            {modalData.server_name || "No Server"}
+            {modalData.server_name || "No Bartender"}
             {!modalData.server_id && (
               <i
                 className={`no-click fas fa-${
@@ -103,7 +103,7 @@ export default function BarSelectModal({ modalData }) {
           }}
         >
           <i className="fas fa-dolly" />
-          {modalData.stocker_name || "No Stocker"}
+          {modalData.stocker_name || "No Barback"}
           {!modalData.stocker_id && (
             <i
               className={`no-click fas fa-${

@@ -11,9 +11,7 @@ import {
 
 const DrinkObj = styled(ColumnSection)`
   width: 100%;
-
   gap: 5px;
-
   padding: 8px;
   margin: 0px 5px;
 `;
@@ -21,13 +19,19 @@ const DrinkObj = styled(ColumnSection)`
 const DrinkButton = styled(Section)`
   width: 100%;
   height: 50px;
-  border-radius: 8px;
-
+  border-radius: 25px;
   font-size: 18px;
 `;
 
 const BigCompactSection = styled(CompactSection)`
   font-size: 22px;
+`;
+
+const RoundButton = styled(GenericButton)`
+  font-size: 16px;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
 `;
 
 const drinkTypeIcons = {
@@ -48,12 +52,11 @@ function AvailableDrink({
 }) {
   return (
     <DrinkObj className="card">
-      <Section style={{ width: "100%" }}>
+      <Section style={{ width: "100%", gap: "5px" }}>
         {showDeleteBtns && (
-          <GenericButton
+          <RoundButton
             iconName="trash-alt"
             className="btn-danger"
-            style={{ fontSize: "18px" }}
             onClick={() => {
               deleteDrinkBtn(drink.id);
             }}
@@ -70,10 +73,9 @@ function AvailableDrink({
           {drink.drink_name}
         </DrinkButton>
         {showEditBtns && (
-          <GenericButton
+          <RoundButton
             iconName="pen"
             className="btn-info"
-            style={{ fontSize: "18px" }}
             onClick={() => {
               openDrinkModal(drink);
             }}

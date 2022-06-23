@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Input = styled.input`
   width: 30px;
@@ -9,11 +9,18 @@ const Input = styled.input`
   font-size: 18px;
 `;
 
-export default function NumberInput({ defaultValue, className, onChange, style }) {
+export default function NumberInput({
+  defaultValue,
+  className,
+  placeholder,
+  onChange,
+  style,
+}) {
   return (
     <Input
       type="number"
       defaultValue={defaultValue}
+      placeholder={placeholder}
       onChange={onChange}
       className={className}
       style={style}

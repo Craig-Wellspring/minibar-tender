@@ -22,6 +22,7 @@ const CartControls = styled(Section)`
 const Cart = styled(Section)`
   width: 5em;
   height: 44px;
+  border-radius: 22px;
   font-size: 22px;
 `;
 
@@ -97,7 +98,7 @@ const StockerDrink = forwardRef(({ drinkData }, ref) => {
         >
           -1
         </CartButton>
-        <Cart className="field">
+        <Cart className={`field ${cartCount != 0 && "active"}`}>
           {drinkData.start_count + drinkData.add_count - drinkData.sold_count}{" "}
           {cartCount !== 0 && (
             <Section style={{ gap: "2px" }}>

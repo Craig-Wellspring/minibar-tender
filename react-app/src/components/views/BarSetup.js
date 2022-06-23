@@ -28,7 +28,7 @@ import {
 } from "../generics/StyledComponents";
 import Modal from "../generics/Modal";
 import AvailableDrinkModal from "../modal-content/AvailableDrinkModal";
-import { sortDrinkListByName } from "../generics/HelperFunctions";
+import { sortedMerge } from "../generics/HelperFunctions";
 import LargeLoading from "../generics/LargeLoading";
 
 const Body = styled(ColumnSection)`
@@ -52,7 +52,7 @@ const defaultDrinkData = {
   price: 9,
   start_count: 24,
   package_count: 6,
-  default_drink: true,
+  default_drink: false,
 };
 
 export default function BarSetup() {
@@ -72,6 +72,7 @@ export default function BarSetup() {
 
   const [showModal, setShowModal] = useState(false);
   const [drinkModalData, setDrinkModalData] = useState(defaultDrinkData);
+  const [errorText, setErrorText] = useState("");
 
   //Initialize
   useEffect(() => {
@@ -127,34 +128,34 @@ export default function BarSetup() {
       );
     }
 
-    setAvailableDrinks(sortDrinkListByName(allDrinksList));
+    setAvailableDrinks(sortedMerge(allDrinksList));
   };
 
   const updateDrinkData = (drink, key, value) => {
     if (value !== null) {
       const otherDrinks = availableDrinks.filter((d) => d.id !== drink.id);
       drink[key] = value;
-      setAvailableDrinks(sortDrinkListByName([...otherDrinks, drink]));
+      setAvailableDrinks(sortedMerge([...otherDrinks, drink]));
     }
   };
 
   const deleteDrinkBtn = (drinkID) => {
     deleteDrink(drinkID);
     setAvailableDrinks(
-      sortDrinkListByName(availableDrinks.filter((d) => d.id !== drinkID))
+      sortedMerge(availableDrinks.filter((d) => d.id !== drinkID))
     );
   };
 
   // Modal Control
   const openDrinkModal = (drinkData) => {
     setShowModal(true);
+    setErrorText("");
     setDrinkModalData(drinkData || defaultDrinkData);
     window.scrollTo(0, 0);
   };
 
   const submitDrinkModal = async (drinkObj) => {
     let otherDrinks = availableDrinks;
-
     if (drinkModalData.id) {
       // Submit edit drink
       otherDrinks = availableDrinks.filter((d) => d.id !== drinkObj.id);
@@ -166,7 +167,7 @@ export default function BarSetup() {
     }
 
     setAvailableDrinks(
-      sortDrinkListByName([
+      sortedMerge([
         ...otherDrinks,
         { ...drinkObj, isSelected: drinkObj.default_drink },
       ])
@@ -244,6 +245,7 @@ export default function BarSetup() {
                   floor === 1 ? "selected down" : "unselected"
                 }`}
                 iconName="1"
+                style={{ width: "120px", borderRadius: "25px" }}
                 onClick={() => {
                   setFloor(1);
                 }}
@@ -253,6 +255,7 @@ export default function BarSetup() {
                   floor === 2 ? "selected down" : "unselected"
                 }`}
                 iconName="2"
+                style={{ width: "120px", borderRadius: "25px" }}
                 onClick={() => {
                   setFloor(2);
                 }}
@@ -351,10 +354,18 @@ export default function BarSetup() {
             setShowModal(false);
           }}
           submitModal={() => {
-            submitDrinkModal(drinkModalData);
+            if (
+              drinkModalData.drink_name.length > 0 &&
+              drinkModalData.price > 0 &&
+              drinkModalData.start_count > 0 &&
+              drinkModalData.package_count > 0
+            )
+              submitDrinkModal(drinkModalData);
+            else setErrorText("All fields required.");
           }}
           submitIcon={drinkModalData.id ? "check-double" : "check"}
           submitClass={drinkModalData.id ? "btn-info" : "btn-selected"}
+          errorText={errorText}
         />
       )}
     </Body>

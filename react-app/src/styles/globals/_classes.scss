@@ -25,6 +25,10 @@ hr {
 
 // Buttons and Inputs
 
+::placeholder {
+  color: $borderColor;
+}
+
 input,
 select,
 .field {
@@ -38,37 +42,50 @@ input:focus,
 select:focus,
 .btn:active,
 .btn.down,
+.field.active,
 button:active {
   outline: 0;
   border-style: inset;
-  transform: translate(2px, 2px);
-  box-shadow: inset 1px 1px 2px $bgColor;
+  transform: translate(1px, 1px);
+  // box-shadow: inset 1px 1px 2px $bgColor;
 }
 
 .btn {
   border: 2px outset $borderColor;
   color: $secondaryTextColor;
   border-radius: 8px;
+  border-radius: 25px;
 }
 
 .btn-unselected {
-  background-color: $btnUnselectedColor;
+  background-color: $midGray;
+  // background-image: linear-gradient(170deg, $ltGray, $darkGray);
 }
+// .btn-unselected.down {
+//   background-image: linear-gradient(350deg, $ltGray, $darkGray);
+// }
 
 .btn-selected {
-  background-color: $btnSelectedColor;
+  background-color: $midGreen;
+  // background-image: linear-gradient(170deg, $midGreen 40%, $darkGreen);
 }
+// .btn-selected.down {
+//   background-image: linear-gradient(350deg, $midGreen 40%, $darkGreen);
+// }
 
 .btn-info {
-  background-color: $btnInfoColor;
+  background-color: $midBlue;
+  // background-image: linear-gradient(170deg, $midBlue 40%, $darkBlue);
 }
 
 .btn-warning {
-  background-color: $btnWarningColor;
+  background-color: $midOrange;
+  // background-image: linear-gradient($ltOrange, $darkOrange);
 }
 
 .btn-danger {
-  background-color: $btnDangerColor;
+  background-color: $midRed;
+  // background-image: linear-gradient($ltRed, $darkRed);
 }
 
 // Font Colors
@@ -82,9 +99,9 @@ button:active {
 }
 
 .green-text {
-  color: $btnSelectedColor;
+  color: $midGreen;
 }
 
 .red-text {
-  color: $btnDangerColor;
+  color: $midRed;
 }

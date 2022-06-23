@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import CloseModalButton from "../buttons/CloseModalButton";
 import GenericButton from "./GenericButton";
-import { Section, ColumnSection, Title } from "./StyledComponents";
+import { Section, ColumnSection, Title, Label } from "./StyledComponents";
 import styled from "styled-components";
 
 const Blur = styled.div`
@@ -33,6 +33,7 @@ function Modal({
   submitModal,
   submitIcon,
   submitClass,
+  errorText,
 }) {
   return (
     <>
@@ -40,8 +41,9 @@ function Modal({
       <ModalBody id="modal">
         <Title>{title}</Title>
         <hr />
-        <div style={{ width: "80%" }}>{modalContent}</div>
+        <div style={{ width: "90%" }}>{modalContent}</div>
         <hr />
+        <Label className="red-text">{errorText}</Label>
         <Section>
           <CloseModalButton closeModal={closeModal} />
           <GenericButton
@@ -63,6 +65,7 @@ Modal.propTypes = {
   submitModal: PropTypes.func,
   submitIcon: PropTypes.string,
   submitClass: PropTypes.string,
+  errorText: PropTypes.string,
 };
 
 Modal.defaultProps = {
@@ -70,6 +73,7 @@ Modal.defaultProps = {
   submitModal: () => {},
   submitIcon: "check",
   submitClass: "btn-selected",
+  errorText: "",
 };
 
 export default Modal;

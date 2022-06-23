@@ -6,8 +6,8 @@ import { Section } from "../generics/StyledComponents";
 
 const OpenBarButton = styled(Section)`
   width: 80%;
-
-  padding: 8px 20px;
+  height: 50px;
+  padding: 0px 20px;
   font-size: 24px;
 `;
 

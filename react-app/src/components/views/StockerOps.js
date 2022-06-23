@@ -14,11 +14,11 @@ import Modal from "../generics/Modal";
 import StockerWrapupModal from "../modal-content/StockerWrapupModal";
 import LargeLoading from "../generics/LargeLoading";
 import LoadingIcon from "../generics/LoadingIcon";
-import { sortDrinkListByName } from "../generics/HelperFunctions";
 import {
   createBarSalesRecord,
   createDrinkSalesRecord,
 } from "../../api/records/salesRecords-data";
+import { sortedMerge } from "../generics/HelperFunctions";
 
 function StockerOps() {
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ function StockerOps() {
         end_count: 0,
       }));
       if (isMounted) {
-        setDrinksList(sortDrinkListByName(drinksWithEndCountKey));
+        setDrinksList(sortedMerge(drinksWithEndCountKey));
         setBarDataLoading((prevState) => prevState - 1);
       }
     })();
@@ -126,7 +126,7 @@ function StockerOps() {
     if (value) {
       const otherDrinks = drinksList.filter((d) => d.id !== drink.id);
       drink.end_count = value;
-      setDrinksList(sortDrinkListByName([...otherDrinks, drink]));
+      setDrinksList(sortedMerge([...otherDrinks, drink]));
     }
   };
 
