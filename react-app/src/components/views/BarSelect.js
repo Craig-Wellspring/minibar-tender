@@ -8,6 +8,13 @@ import BarSelectModal from "../modal-content/BarSelectModal";
 import { getCurrentUser } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import LargeLoading from "../generics/LargeLoading";
+import styled from "styled-components";
+
+const BarList = styled(ColumnSection)`
+  width: 90%;
+  gap: 8px;
+  padding: 8px 20px;
+`;
 
 const defaultBarData = {
   id: "",
@@ -68,7 +75,7 @@ export default function BarSelect() {
       {isLoading ? (
         <LargeLoading />
       ) : (
-        <ColumnSection style={{ width: "100%" }}>
+        <BarList className="card">
           {openBarsList.length > 0 ? (
             openBarsList.map((openBarInfo) => (
               <OpenBar
@@ -78,14 +85,9 @@ export default function BarSelect() {
               />
             ))
           ) : (
-            <Label
-              className="card"
-              style={{ width: "80%", padding: "8px 20px" }}
-            >
-              No Open Bars
-            </Label>
+            <Label style={{ width: "80%" }}>No Open Bars</Label>
           )}
-        </ColumnSection>
+        </BarList>
       )}
       <NewBarButton />
 

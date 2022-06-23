@@ -8,7 +8,7 @@ const OpenBarButton = styled(Section)`
   width: 80%;
   height: 50px;
   padding: 0px 20px;
-  font-size: 24px;
+  font-size: 25px;
 `;
 
 export default function OpenBar({ barInfo, selectBar }) {
