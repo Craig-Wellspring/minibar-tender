@@ -5,7 +5,7 @@ import StockerWrapupDrink from "../listables/StockerWrapupDrink";
 
 const WrapupForm = styled.div`
   display: grid;
-  grid-template-columns: auto 50px 50px;
+  grid-template-columns: auto 40px 40px 40px;
   gap: 8px;
 
   justify-items: center;
@@ -13,6 +13,15 @@ const WrapupForm = styled.div`
 
   padding: 20px;
   margin: 10px 0px;
+`;
+
+const ColumnLabel = styled.div`
+  height: 40px;
+  font-size: 15px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 4px 0;
+  border-bottom: 1px dashed white;
 `;
 
 export default function StockerWrapupModal({
@@ -53,9 +62,10 @@ export default function StockerWrapupModal({
       </ColumnSection>
 
       <WrapupForm id="wrapup-form" className="card">
-        <div>{"Drink Name"}</div>
-        <div>{"Total Count"}</div>
-        <div>{"End Count"}</div>
+        <ColumnLabel>{"Drink Name"}</ColumnLabel>
+        <ColumnLabel>{"Price"}</ColumnLabel>
+        <ColumnLabel>{"Total Count"}</ColumnLabel>
+        <ColumnLabel>{"End Count"}</ColumnLabel>
         {drinks.map((d) => (
           <StockerWrapupDrink
             key={d.id}
