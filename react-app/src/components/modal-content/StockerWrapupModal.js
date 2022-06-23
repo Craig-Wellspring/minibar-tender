@@ -77,7 +77,7 @@ export default function StockerWrapupModal({
       </WrapupForm>
 
       <ColumnSection id="totals-display">
-        <Label>Total Sales</Label>
+        <Label>Total Sales:</Label>
         <Title style={{ fontSize: "40px" }}>{`$${totalSales}`}</Title>
         <Label>Tipout:</Label>
         <Title style={{ fontSize: "40px" }}>{`$${Math.round(
